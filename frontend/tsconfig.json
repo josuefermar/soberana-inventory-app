@@ -9,7 +9,6 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "noImplicitUseStrict": true
+    "noImplicitOverride": true
   }
 }

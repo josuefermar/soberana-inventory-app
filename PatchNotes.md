@@ -4,7 +4,10 @@
 - At the beggining of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.1 (WIP)
+## v0.0.2 (WIP)
+- [bugfix] Remove deprecated noImplicitUseStrict from frontend tsconfig.json
+
+## v0.0.1 
 
 - [feature] Initialize backend with FastAPI health check and test
 - [feature] Initialize frontend
