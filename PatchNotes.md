@@ -4,7 +4,12 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.16 (WIP)
+## v0.0.17 (WIP)
+
+## v0.0.16
+
+- [feature] Docs: consolidate architecture — docs/ARQUITECTURA_PROYECTO_SOBERANA.md (single architecture and flow doc); remove PROJECT_STRUCTURE_AND_FLOW.md, backend/BACKEND_STRUCTURE_AND_FLOW.md, frontend/FRONTEND_STRUCTURE_AND_FLOW.md, TechnicalTestDescription.md, backend/db_local.md, backend/tests/UNIT_TEST_SUGGESTIONS_INVENTORY.md, frontend/README.md
+- [feature] Readme: rewrite in Spanish — "La Soberana – Sistema de Conteo Mensual de Inventarios"; índice, descripción, arquitectura, estructura, modelo de datos, variables de entorno, ejecución local/Docker, testing, CI/CD, decisiones técnicas
 
 ## v0.0.15
 
