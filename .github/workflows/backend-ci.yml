@@ -2,12 +2,12 @@ name: Backend CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, develop]
     paths:
       - 'backend/**'
       - '.github/workflows/backend-ci.yml'
   pull_request:
-    branches: [main, master]
+    branches: [main, master, develop]
     paths:
       - 'backend/**'
       - '.github/workflows/backend-ci.yml'
@@ -61,9 +61,15 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Verify app loads
-        run: python -c "from app.main import app; assert app.title == 'Soberana API'"
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          AUTO_SYNC_USERS: 'false'
+          SECRET_KEY: ci-secret-key-for-tests-only
+        run: python -c "from app.main import app; assert app.title == 'La Soberana API'"
 
       - name: Run tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          AUTO_SYNC_USERS: 'false'
+          SECRET_KEY: ci-secret-key-for-tests-only
         run: python -m pytest tests/ -v

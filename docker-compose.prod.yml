@@ -1,4 +1,4 @@
-# Default = development. For production use: docker compose -f docker-compose.prod.yml up --build
+# Production: no code volumes, no reload, frontend built and served by nginx
 version: '3.9'
 
 services:
@@ -34,26 +34,17 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
       AUTO_SEED_MASTER_DATA: "true"
       AUTO_SYNC_USERS: "false"
-    volumes:
-      - ./backend:/app
-    working_dir: /app
-    command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
-  
+    # No volume: code is in the image
+
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+    build: ./frontend
     container_name: inventory_frontend
     restart: always
     ports:
-      - 5173:5173
+      - 3000:80
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules  # keep container node_modules, use host source
-    working_dir: /app
+    # No volume: built static files in the image, nginx serves them
 
 volumes:
   postgres_data:
-  
