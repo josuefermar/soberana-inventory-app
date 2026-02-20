@@ -36,8 +36,12 @@ export function ProductRow({
   unitLabel = 'Measure Unit',
   deleteLabel = 'Delete',
 }) {
-  const productOption = productOptions.find((o) => o.id === row.product_id) ?? null;
+  const productOption =
+    (row.product_id && productOptions.find((o) => o.id === row.product_id)) ?? null;
   const measureOption = measureOptions.find((m) => m.id === row.measure_unit_id) ?? null;
+
+  const productInputValue =
+    productOption != null ? productOption.label : (row.productInputValue ?? '');
 
   /** @type {Array<{ id: string; name: string }>} */
   const availableMeasures = (() => {
@@ -60,7 +64,16 @@ export function ProductRow({
       productLabel: newValue?.label,
       product,
       measure_unit_id: baseUnitId || row.measure_unit_id,
+      productInputValue: newValue ? newValue.label : '',
     });
+  };
+
+  const handleProductInputChange = (_event, inputValue) => {
+    const next = (inputValue ?? '').trim();
+    const current = (row.productInputValue ?? '').trim();
+    if (next === current) return;
+    if (next === '' && productOption != null) return;
+    onUpdate({ productInputValue: inputValue ?? '' });
   };
 
   const handleMeasureChange = (e) => {
@@ -83,8 +96,9 @@ export function ProductRow({
           fullWidth
           options={productOptions}
           value={productOption}
+          inputValue={productInputValue}
+          onInputChange={handleProductInputChange}
           onChange={handleProductChange}
-          onInputChange={(_e, inputValue) => onFetchProducts?.(inputValue)}
           getOptionLabel={(opt) => opt?.label ?? ''}
           isOptionEqualToValue={(opt, val) => opt?.id === val?.id}
           loading={productOptionsLoading}

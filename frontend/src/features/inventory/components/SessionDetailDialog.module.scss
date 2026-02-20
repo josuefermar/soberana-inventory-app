@@ -1,0 +1,91 @@
+@use '../../../theme/soberana-tokens' as *;
+
+.dialog {
+  :global(.MuiDialog-paper) {
+    border-radius: $radius-lg;
+    box-shadow: $shadow-lg;
+  }
+}
+
+.paper {
+  max-height: 90vh;
+}
+
+.title {
+  font-weight: $font-weight-semibold;
+  color: $soberana-gray-900;
+  border-bottom: 1px solid $soberana-border;
+  padding: $spacing-unit * 2 $spacing-unit * 3;
+}
+
+.content {
+  padding: $spacing-unit * 3 !important;
+  background: $soberana-bg;
+}
+
+.summary {
+  margin-bottom: $spacing-unit * 3;
+  padding: $spacing-unit * 2;
+  background: $soberana-white;
+  border: 1px solid $soberana-border;
+  border-radius: $radius;
+}
+
+.summaryRow {
+  margin-bottom: $spacing-unit;
+  font-size: 0.875rem;
+  color: $soberana-gray-900;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tableSectionTitle {
+  font-weight: $font-weight-semibold;
+  color: $soberana-gray-700;
+  margin-bottom: $spacing-unit * 1.5 !important;
+  font-size: 0.875rem;
+}
+
+.tableWrap {
+  border: 1px solid $soberana-border;
+  border-radius: $radius;
+  overflow: auto;
+  background: $soberana-white;
+}
+
+.headerRow {
+  background: $soberana-table-header !important;
+  border-bottom: 1px solid $soberana-border;
+}
+
+.headerCell {
+  color: $soberana-gray-700 !important;
+  font-weight: $font-weight-semibold !important;
+  font-size: 0.8125rem;
+  padding: $spacing-unit * 1.25 $spacing-unit * 2 !important;
+}
+
+.bodyRow {
+  &:not(:last-child) {
+    border-bottom: 1px solid $soberana-border;
+  }
+}
+
+.bodyCell {
+  padding: $spacing-unit * 1.25 $spacing-unit * 2 !important;
+  font-size: 0.8125rem;
+  color: $soberana-gray-900;
+}
+
+.noProducts {
+  padding: $spacing-unit * 2;
+  font-style: italic;
+}
+
+.actions {
+  padding: $spacing-unit * 2 $spacing-unit * 3 !important;
+  border-top: 1px solid $soberana-border;
+  background: $soberana-white;
+}

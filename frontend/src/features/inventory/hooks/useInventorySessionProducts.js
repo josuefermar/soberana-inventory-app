@@ -5,6 +5,7 @@ import { useState, useCallback } from 'react';
  *   id: string;
  *   product_id: string;
  *   productLabel?: string;
+ *   productInputValue?: string;
  *   measure_unit_id: string;
  *   quantity: number;
  *   product?: import('../services/types').ProductListItem;
@@ -40,6 +41,7 @@ export function useInventorySessionProducts() {
         product_id: '',
         measure_unit_id: '',
         quantity: INITIAL_QUANTITY,
+        productInputValue: '',
       },
     ]);
     setValidationErrors((prev) => {

@@ -4,7 +4,15 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.10 (WIP)
+## v0.0.11 (WIP)
+
+- [feature] Backend: sync users from API — synced users get random role (WAREHOUSE_MANAGER or PROCESS_LEADER), never ADMIN
+- [feature] Frontend: SessionDetailDialog — modal with session summary (created by, date, warehouse, month) and products/counts table; fetches getCounts(session.id); SessionDetailDialog.module.scss
+- [feature] Frontend: AdminSessionsPage — "View" action per row opens SessionDetailDialog; columns and rows include actions; i18n for view, actions, detail labels and table headers (en/es)
+- [feature] Frontend: ProductRow — controlled productInputValue and onInputChange; product option resolve with row.productInputValue fallback; useInventorySessionProducts adds productInputValue to row state
+- [feature] Frontend: useProductsAutocomplete — fetch products once (fetchedOnceRef); client-side filtering by MUI Autocomplete; fetchOptions() no longer takes inputValue
+
+## v0.0.10
 
 - [feature] Frontend: MonthPicker — MUI X DatePicker (year/month views, format MMMM YYYY, value YYYY-MM); used in AdminSessionsPage (month filter) and CreateSessionPage (month field)
 - [feature] Frontend: date picker setup — LocalizationProvider + AdapterDayjs in AppProviders; dayjs + dayjs/locale/es; @mui/x-date-pickers and dayjs deps

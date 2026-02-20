@@ -18,6 +18,11 @@ def _random_8_digit_string() -> str:
     return "".join(random.choices(string.digits, k=8))
 
 
+def _random_role() -> UserRole:
+    """Random role for synced users; never ADMIN."""
+    return random.choice([UserRole.WAREHOUSE_MANAGER, UserRole.PROCESS_LEADER])
+
+
 def _raw_to_user(raw: dict, now: datetime) -> User | None:
     """Map one API result to User. Returns None if email missing."""
     email = (raw.get("email") or "").strip().lower()
@@ -39,7 +44,7 @@ def _raw_to_user(raw: dict, now: datetime) -> User | None:
         identification=_random_8_digit_string(),
         name=name,
         email=email,
-        role=UserRole.WAREHOUSE_MANAGER,
+        role=_random_role(),
         hashed_password=None,
         warehouses=[],
         is_active=True,

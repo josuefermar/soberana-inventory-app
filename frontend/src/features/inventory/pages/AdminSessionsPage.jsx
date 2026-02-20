@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
@@ -12,6 +12,7 @@ import {
 import { AppSelect } from '../../../components/ui/Select';
 import { WarehouseAutocomplete } from '../../warehouses/components';
 import { getWarehouses } from '../../warehouses/services';
+import { SessionDetailDialog } from '../components';
 import { useAdminSessions } from '../hooks';
 import styles from './AdminSessionsPage.module.scss';
 
@@ -30,12 +31,16 @@ function useColumns() {
     { id: 'created_at', label: t('inventorySessions.createdAt') },
     { id: 'closed_at', label: t('inventorySessions.closedAt') },
     { id: 'products_count', label: t('inventorySessions.productsCount') },
+    { id: 'actions', label: t('inventorySessions.actions') },
   ];
 }
 
 export function AdminSessionsPage() {
   const { t } = useTranslation();
   const [warehouseOptions, setWarehouseOptions] = useState([]);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+
   useEffect(() => {
     getWarehouses()
       .then((list) =>
@@ -45,6 +50,7 @@ export function AdminSessionsPage() {
       )
       .catch(() => setWarehouseOptions([]));
   }, []);
+
   const {
     sessions,
     loading,
@@ -57,6 +63,16 @@ export function AdminSessionsPage() {
   } = useAdminSessions();
   const columns = useColumns();
 
+  const handleViewSession = useCallback((session) => {
+    setSelectedSession(session);
+    setOpenDetailModal(true);
+  }, []);
+
+  const handleCloseDetailModal = useCallback(() => {
+    setOpenDetailModal(false);
+    setSelectedSession(null);
+  }, []);
+
   const rows = sessions.map((s) => ({
     id: s.id,
     warehouse_description: s.warehouse_description || '—',
@@ -65,6 +81,11 @@ export function AdminSessionsPage() {
     created_at: formatDate(s.created_at),
     closed_at: formatDate(s.closed_at),
     products_count: s.products_count ?? 0,
+    actions: (
+      <AppButton size="small" variant="outlined" onClick={() => handleViewSession(s)}>
+        {t('inventorySessions.view')}
+      </AppButton>
+    ),
   }));
 
   return (
@@ -109,6 +130,11 @@ export function AdminSessionsPage() {
           <AppTable columns={columns} rows={rows} rowKey="id" />
         </div>
       )}
+      <SessionDetailDialog
+        open={openDetailModal}
+        onClose={handleCloseDetailModal}
+        session={selectedSession}
+      />
       <AppSnackbar
         open={snack.open}
         message={snack.message}
