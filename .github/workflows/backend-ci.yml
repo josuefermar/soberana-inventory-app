@@ -1,3 +1,6 @@
+# Backend CI: tests and validation for FastAPI app.
+# Requires: DATABASE_URL, SECRET_KEY; AUTO_SYNC_USERS and AUTO_SEED_MASTER_DATA false in CI.
+
 name: Backend CI
 
 on:
@@ -16,11 +19,17 @@ concurrency:
   group: backend-ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+  # For production deploys, set BACKEND_SECRET_KEY in repo secrets and reference it here.
+  SECRET_KEY: 'ci-secret-key-for-tests-only'
+  AUTO_SYNC_USERS: 'false'
+  AUTO_SEED_MASTER_DATA: 'false'
+
 jobs:
   build-and-test:
     name: Build and test
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: backend
@@ -53,23 +62,21 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-backend-${{ hashFiles('backend/requirements.txt') }}
+          key: ${{ runner.os }}-py311-pip-backend-${{ hashFiles('backend/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-backend-
+            ${{ runner.os }}-py311-pip-backend-
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Validate dependencies
+        run: pip check
+
+      - name: Run migrations
+        run: alembic upgrade head
+
       - name: Verify app loads
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-          AUTO_SYNC_USERS: 'false'
-          SECRET_KEY: ci-secret-key-for-tests-only
         run: python -c "from app.main import app; assert app.title == 'La Soberana API'"
 
       - name: Run tests
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-          AUTO_SYNC_USERS: 'false'
-          SECRET_KEY: ci-secret-key-for-tests-only
-        run: python -m pytest tests/ -v
+        run: python -m pytest tests/ -v --tb=short

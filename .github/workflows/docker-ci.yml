@@ -1,3 +1,5 @@
+# Docker CI: validate backend and frontend images build. No push; use registry secrets for deploy.
+
 name: Docker CI
 
 on:
@@ -7,6 +9,7 @@ on:
       - 'backend/**'
       - 'frontend/**'
       - '**/Dockerfile'
+      - '**/Dockerfile.*'
       - 'docker-compose.yml'
       - 'docker-compose*.yml'
       - '.github/workflows/docker-ci.yml'
@@ -16,6 +19,7 @@ on:
       - 'backend/**'
       - 'frontend/**'
       - '**/Dockerfile'
+      - '**/Dockerfile.*'
       - 'docker-compose.yml'
       - 'docker-compose*.yml'
       - '.github/workflows/docker-ci.yml'
@@ -45,6 +49,7 @@ jobs:
           tags: backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          provenance: false
 
   build-frontend:
     name: Build Frontend image
@@ -66,3 +71,4 @@ jobs:
           tags: frontend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          provenance: false

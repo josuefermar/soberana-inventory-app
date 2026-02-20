@@ -4,7 +4,9 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.14 (WIP)
+## v0.0.15 (WIP)
+
+## v0.0.14
 
 - [feature] Backend: JWT payload includes user name; ListInventorySessionsUseCase and list_filtered accept warehouse_ids (sessions scoped by role); WAREHOUSE_MANAGER can list sessions and list counts (warehouse access); GET /inventory-sessions/{id} for single session; PROCESS_LEADER can list warehouses
 - [feature] Backend: user list read model — UserListDto, WarehouseRef, UserListQuery (list_all_with_warehouses, get_by_id_for_display); UserRepositoryImpl implements UserListQuery with joinedload; GET /users/ and create/update return warehouses as { id, name }
@@ -13,6 +15,9 @@
 - [feature] Frontend: AdminSessionsPage — actions per row: View, View Counts (ADMIN), Register Count (ADMIN/WAREHOUSE_MANAGER); navigate to view-counts or register-count
 - [feature] Frontend: EditUserDialog — warehouse multi-select (WarehouseAutocomplete), optional new password; UsersPage passes warehouseOptions; User.warehouses as { id, name }
 - [feature] Frontend: countUtils.toPackagingQuantity shared by useCreateSession and useRegisterCount; i18n registerCountSubtitle, countsRegistered, registerCounts, newPassword, cancel (en/es); remove enterSessionId
+- [config] CI: backend-ci — env block (DATABASE_URL, SECRET_KEY, AUTO_SYNC_USERS, AUTO_SEED_MASTER_DATA); pip check; alembic upgrade head; cache key py311; pytest --tb=short
+- [config] CI: frontend-ci — node_modules cache (node20-npm); lint step (npm run lint --if-present)
+- [config] CI: docker-ci — trigger on Dockerfile.*; provenance: false for backend and frontend build
 
 ## v0.0.13
 
