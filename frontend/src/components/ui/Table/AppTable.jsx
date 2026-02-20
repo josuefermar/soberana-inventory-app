@@ -3,9 +3,10 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import styles from './AppTable.module.scss';
 
 /**
- * Application table with styled header row (primary background).
+ * Application table: light gray header, clear borders (Soberana style).
  * Columns and rows are passed as props; presentation-only.
  * @param {Object} props
  * @param {Array<{ id: string; label: string; align?: 'left'|'right'|'center' }>} props.columns
@@ -13,33 +14,30 @@ import TableRow from '@mui/material/TableRow';
  * @param {string} [props.rowKey] - Key field for row key (default: 'id')
  */
 export function AppTable({ columns = [], rows = [], rowKey = 'id' }) {
-
   return (
-    <Table>
-      <TableHead>
-        <TableRow sx={{ bgcolor: 'primary.main' }}>
-          {columns.map((col) => (
-            <TableCell
-              key={col.id}
-              align={col.align}
-              sx={{ color: 'primary.contrastText', fontWeight: 600 }}
-            >
-              {col.label}
-            </TableCell>
-          ))}
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rows.map((row, idx) => (
-          <TableRow key={row[rowKey] ?? idx}>
+    <div className={styles.tableWrap}>
+      <Table className={styles.table} size="medium">
+        <TableHead>
+          <TableRow className={styles.headerRow}>
             {columns.map((col) => (
-              <TableCell key={col.id} align={col.align}>
-                {row[col.id]}
+              <TableCell key={col.id} align={col.align} className={styles.headerCell}>
+                {col.label}
               </TableCell>
             ))}
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {rows.map((row, idx) => (
+            <TableRow key={row[rowKey] ?? idx} className={styles.bodyRow}>
+              {columns.map((col) => (
+                <TableCell key={col.id} align={col.align} className={styles.bodyCell}>
+                  {row[col.id]}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 }

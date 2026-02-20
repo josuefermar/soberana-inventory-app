@@ -6,4 +6,5 @@ export { AppSnackbar } from './Snackbar';
 export { AppTable } from './Table';
 export { AppLoader } from './Loader';
 export { AppCard } from './Card';
+export { DashboardCard } from './DashboardCard';
 export { LanguageSelector } from './LanguageSelector';

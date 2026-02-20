@@ -1,0 +1,51 @@
+@use '../../../theme/soberana-tokens' as *;
+
+.sidebar {
+  width: 72px;
+  min-width: 72px;
+  background: $soberana-white;
+  border-right: 1px solid $soberana-border;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-unit 0;
+  box-shadow: $shadow-sm;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: $radius;
+  color: $soberana-gray-700;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+
+  &:hover {
+    background-color: $soberana-gray-100;
+    color: $soberana-green;
+  }
+
+  &.active {
+    background-color: rgba($soberana-green, 0.1);
+    color: $soberana-green;
+  }
+}
+
+.icon {
+  font-size: 24px;
+}
+
+.tooltip {
+  font-family: $font-family;
+}

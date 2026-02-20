@@ -13,6 +13,7 @@ import { AppSelect } from '../../../components/ui/Select';
 import { WarehouseAutocomplete } from '../../warehouses/components';
 import { getWarehouses } from '../../warehouses/services';
 import { useAdminSessions } from '../hooks';
+import styles from './AdminSessionsPage.module.scss';
 
 const STATUS_OPTIONS = [
   { value: '', label: '—' },
@@ -68,10 +69,10 @@ export function AdminSessionsPage() {
 
   return (
     <PageContainer maxWidth="lg">
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" className={styles.pageTitle}>
         {t('inventorySessions.adminSessionsTitle')}
       </Typography>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2, alignItems: 'center' }}>
+      <Box className={styles.filtersBar}>
         <WarehouseAutocomplete
           options={warehouseOptions}
           valueIds={filters.warehouse_id}
@@ -103,10 +104,12 @@ export function AdminSessionsPage() {
       </Box>
       {loading && <AppLoader message={t('common.loading')} />}
       {!loading && rows.length === 0 && (
-        <Typography color="text.secondary">{t('inventorySessions.noSessions')}</Typography>
+        <Typography className={styles.emptyMessage}>{t('inventorySessions.noSessions')}</Typography>
       )}
       {!loading && rows.length > 0 && (
-        <AppTable columns={columns} rows={rows} rowKey="id" />
+        <div className={styles.tableWrap}>
+          <AppTable columns={columns} rows={rows} rowKey="id" />
+        </div>
       )}
       <AppSnackbar
         open={snack.open}

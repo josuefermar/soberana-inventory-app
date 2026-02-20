@@ -1,0 +1,36 @@
+@use '../../../theme/soberana-tokens' as *;
+
+.tableWrap {
+  border: 1px solid $soberana-border;
+  border-radius: $radius;
+  overflow: hidden;
+  background: $soberana-white;
+}
+
+.table {
+  font-family: $font-family;
+}
+
+.headerRow {
+  background: $soberana-table-header !important;
+  border-bottom: 1px solid $soberana-border;
+}
+
+.headerCell {
+  color: $soberana-gray-700 !important;
+  font-weight: $font-weight-semibold !important;
+  font-size: 0.875rem;
+  padding: $spacing-unit * 1.5 $spacing-unit * 2;
+}
+
+.bodyRow {
+  &:not(:last-child) {
+    border-bottom: 1px solid $soberana-border;
+  }
+}
+
+.bodyCell {
+  padding: $spacing-unit * 1.5 $spacing-unit * 2;
+  font-size: 0.875rem;
+  color: $soberana-gray-900;
+}

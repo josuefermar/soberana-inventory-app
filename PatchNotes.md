@@ -4,7 +4,19 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.8 (WIP)
+## v0.0.9 (WIP)
+
+- [feature] Frontend: AppLayout — Navbar + Sidebar + Outlet; private routes nested under layout; router refactor (paths /dashboard, /users, etc. as children of /)
+- [feature] Frontend: Sidebar — icon nav (Dashboard, Admin Sessions, Create Session, Users, Measures, Feature Flags, Logout); role-based visibility; NavLink active state; SCSS module
+- [feature] Frontend: Navbar restyle — SCSS module (Navbar.module.scss); white bar, Soberana green accent, brand "La Soberana"; logo button
+- [feature] Frontend: design system — soberana-tokens.scss (colors, spacing, shadows, radius, font); soberana-global.scss; theme.js; Open Sans (index.html); title "La Soberana — Gestión de inventarios"
+- [feature] Frontend: DashboardCard — new UI component (icon, title, description, action, accent green/grain); used in DashboardPage
+- [feature] Frontend: DashboardPage redesign — card grid by role (ADMIN: users, create session, sessions, measures, feature flags, sync; WAREHOUSE_MANAGER: create session, register count; PROCESS_LEADER: view counts); prompt for sessionId; DashboardPage.module.scss
+- [feature] Frontend: AppTable — Soberana style (light gray header, borders); AppTable.module.scss
+- [feature] Frontend: AdminSessionsPage and RegisterCountPage — layout/styling with module SCSS
+- [config] Frontend: sass dependency; main.jsx imports global styles
+
+## v0.0.8
 
 - [feature] Backend: feature flags use cases — ListFeatureFlagsUseCase, CreateFeatureFlagUseCase, UpdateFeatureFlagUseCase, ToggleFeatureFlagUseCase; repository get_all, get_by_id, update, toggle (key no longer used for update)
 - [feature] Backend: GET /feature-flags/, POST /feature-flags/ (CreateFeatureFlagRequest), PUT /feature-flags/{id} (UpdateFeatureFlagRequest), PATCH /feature-flags/{id}/toggle (ADMIN)

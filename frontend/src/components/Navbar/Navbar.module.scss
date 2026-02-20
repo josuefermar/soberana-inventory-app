@@ -1,0 +1,59 @@
+@use '../../theme/soberana-tokens' as *;
+
+.navbar {
+  background: $soberana-white !important;
+  color: $soberana-gray-900 !important;
+  box-shadow: $shadow-sm;
+  border-bottom: 1px solid $soberana-border;
+}
+
+.toolbar {
+  min-height: 56px;
+  padding-left: $spacing-unit * 2;
+  padding-right: $spacing-unit * 2;
+}
+
+.logoButton {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-right: $spacing-unit * 2;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.logo {
+  height: 40px;
+}
+
+.brand {
+  font-weight: $font-weight-semibold;
+  font-size: 1.125rem;
+  color: $soberana-green;
+  margin-right: $spacing-unit * 2;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.role {
+  font-size: 0.875rem;
+  color: $soberana-gray-700;
+  margin-right: $spacing-unit;
+}
+
+.logoutBtn {
+  color: $soberana-green !important;
+  font-weight: $font-weight-medium !important;
+
+  &:hover {
+    background-color: rgba($soberana-green, 0.08) !important;
+    color: $soberana-green-dark !important;
+  }
+}

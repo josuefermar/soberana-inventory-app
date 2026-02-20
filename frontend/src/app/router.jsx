@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Navbar } from '../components/Navbar';
+import { AppLayout } from '../components/layout';
 import { PrivateRoute, RoleGuard } from '../components/guards';
 import { LoginPage, DashboardPage } from '../features/auth/pages';
 import { UsersPage } from '../features/users/pages';
@@ -13,96 +13,80 @@ import { MeasuresPage } from '../features/measures/pages';
 import { FeatureFlagsAdminPage } from '../features/featureFlags/pages';
 
 /**
- * Application router. Composition only: Navbar + Routes.
- * Guards and role checks unchanged.
+ * Application router. Layout (Navbar + Sidebar) wraps private routes; login is full-screen.
  */
 export function AppRouter() {
   return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <AppLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route path="dashboard" element={<DashboardPage />} />
         <Route
-          path="/dashboard"
+          path="users"
           element={
-            <PrivateRoute>
-              <DashboardPage />
-            </PrivateRoute>
+            <RoleGuard allowedRoles={['ADMIN']}>
+              <UsersPage />
+            </RoleGuard>
           }
         />
         <Route
-          path="/users"
+          path="measures"
           element={
-            <PrivateRoute>
-              <RoleGuard allowedRoles={['ADMIN']}>
-                <UsersPage />
-              </RoleGuard>
-            </PrivateRoute>
+            <RoleGuard allowedRoles={['ADMIN']}>
+              <MeasuresPage />
+            </RoleGuard>
           }
         />
         <Route
-          path="/measures"
+          path="feature-flags"
           element={
-            <PrivateRoute>
-              <RoleGuard allowedRoles={['ADMIN']}>
-                <MeasuresPage />
-              </RoleGuard>
-            </PrivateRoute>
+            <RoleGuard allowedRoles={['ADMIN']}>
+              <FeatureFlagsAdminPage />
+            </RoleGuard>
           }
         />
         <Route
-          path="/feature-flags"
+          path="admin-sessions"
           element={
-            <PrivateRoute>
-              <RoleGuard allowedRoles={['ADMIN']}>
-                <FeatureFlagsAdminPage />
-              </RoleGuard>
-            </PrivateRoute>
+            <RoleGuard allowedRoles={['ADMIN']}>
+              <AdminSessionsPage />
+            </RoleGuard>
           }
         />
         <Route
-          path="/admin-sessions"
+          path="create-session"
           element={
-            <PrivateRoute>
-              <RoleGuard allowedRoles={['ADMIN']}>
-                <AdminSessionsPage />
-              </RoleGuard>
-            </PrivateRoute>
+            <RoleGuard allowedRoles={['ADMIN', 'WAREHOUSE_MANAGER']}>
+              <CreateSessionPage />
+            </RoleGuard>
           }
         />
         <Route
-          path="/create-session"
+          path="register-count/:sessionId"
           element={
-            <PrivateRoute>
-              <RoleGuard allowedRoles={['ADMIN', 'WAREHOUSE_MANAGER']}>
-                <CreateSessionPage />
-              </RoleGuard>
-            </PrivateRoute>
+            <RoleGuard allowedRoles={['ADMIN', 'WAREHOUSE_MANAGER']}>
+              <RegisterCountPage />
+            </RoleGuard>
           }
         />
         <Route
-          path="/register-count/:sessionId"
+          path="view-counts/:sessionId"
           element={
-            <PrivateRoute>
-              <RoleGuard allowedRoles={['ADMIN', 'WAREHOUSE_MANAGER']}>
-                <RegisterCountPage />
-              </RoleGuard>
-            </PrivateRoute>
+            <RoleGuard allowedRoles={['ADMIN', 'PROCESS_LEADER']}>
+              <ViewCountsPage />
+            </RoleGuard>
           }
         />
-        <Route
-          path="/view-counts/:sessionId"
-          element={
-            <PrivateRoute>
-              <RoleGuard allowedRoles={['ADMIN', 'PROCESS_LEADER']}>
-                <ViewCountsPage />
-              </RoleGuard>
-            </PrivateRoute>
-          }
-        />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
-    </>
+        <Route index element={<Navigate to="dashboard" replace />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+    </Routes>
   );
 }

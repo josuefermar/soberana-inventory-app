@@ -1,0 +1,40 @@
+@use '../../../theme/soberana-tokens' as *;
+
+.pageTitle {
+  font-weight: 600;
+  color: $soberana-gray-900;
+  margin-bottom: $spacing-unit !important;
+}
+
+.sessionBadge {
+  font-size: 0.875rem;
+  color: $soberana-gray-700;
+  margin-bottom: $spacing-unit * 2 !important;
+  padding: $spacing-unit;
+  background: $soberana-gray-100;
+  border-radius: $radius;
+  border: 1px solid $soberana-border;
+}
+
+.formCard {
+  background: $soberana-white;
+  border: 1px solid $soberana-border;
+  border-radius: $radius-lg;
+  padding: $spacing-unit * 3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.formActions {
+  margin-top: $spacing-unit * 2;
+  display: flex;
+  gap: $spacing-unit;
+  align-items: center;
+}
+
+.totalUnits {
+  margin-top: $spacing-unit;
+  padding: $spacing-unit;
+  background: rgba($soberana-green, 0.08);
+  border-radius: $radius;
+  color: $soberana-gray-900;
+}

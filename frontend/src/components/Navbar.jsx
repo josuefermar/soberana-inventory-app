@@ -1,8 +1,9 @@
-import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { LanguageSelector } from './ui';
+import styles from './Navbar/Navbar.module.scss';
 
 export function Navbar() {
   const { user, logout } = useAuth();
@@ -15,40 +16,35 @@ export function Navbar() {
   };
 
   return (
-    <AppBar position="static" color="primary">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ gap: 2 }}>
-          <Box
-            component="button"
-            onClick={() => navigate('/dashboard')}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              cursor: 'pointer',
-              background: 'none',
-              border: 'none',
-              padding: 0,
-            }}
-          >
-            <img
-              src="/logo-la-soberana.svg"
-              alt="La Soberana"
-              style={{ height: 40 }}
-            />
-          </Box>
-          {user && (
-            <>
-              <Typography variant="body2" sx={{ flexGrow: 1, color: 'primary.contrastText' }}>
-                {user.role}
-              </Typography>
-              <LanguageSelector />
-              <Button color="inherit" onClick={handleLogout}>
-                {t('common.logout')}
-              </Button>
-            </>
-          )}
-        </Toolbar>
-      </Container>
+    <AppBar position="static" className={styles.navbar} elevation={0}>
+      <Toolbar className={styles.toolbar} disableGutters>
+        <Box
+          component="button"
+          onClick={() => navigate(user ? '/dashboard' : '/login')}
+          className={styles.logoButton}
+        >
+          <img
+            src="/logo-la-soberana.svg"
+            alt="La Soberana"
+            className={styles.logo}
+          />
+          <Typography component="span" className={styles.brand}>
+            La Soberana
+          </Typography>
+        </Box>
+        {user && (
+          <>
+            <div className={styles.spacer} />
+            <Typography variant="body2" className={styles.role}>
+              {user.role}
+            </Typography>
+            <LanguageSelector />
+            <Button className={styles.logoutBtn} onClick={handleLogout}>
+              {t('common.logout')}
+            </Button>
+          </>
+        )}
+      </Toolbar>
     </AppBar>
   );
 }

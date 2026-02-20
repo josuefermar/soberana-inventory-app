@@ -1,0 +1,25 @@
+@use '../../../theme/soberana-tokens' as *;
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: $soberana-bg;
+}
+
+.mainRow {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  padding: $spacing-unit * 3;
+  background: $soberana-bg;
+}
+
+.contentNoSidebar {
+  padding: $spacing-unit * 3;
+}

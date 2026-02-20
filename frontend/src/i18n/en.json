@@ -88,6 +88,7 @@
     "status": "Status"
   },
   "dashboard": {
+    "title": "Dashboard",
     "welcome": "Welcome",
     "role": "Role",
     "manageUsers": "Manage Users",

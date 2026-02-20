@@ -1,0 +1,26 @@
+@use './soberana-tokens' as *;
+
+// Global overrides and base styles (Soberana)
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --soberana-green: #{$soberana-green};
+  --soberana-green-light: #{$soberana-green-light};
+  --soberana-green-dark: #{$soberana-green-dark};
+  --soberana-grain: #{$soberana-grain};
+  --soberana-grain-light: #{$soberana-grain-light};
+  --soberana-border: #{$soberana-border};
+  --soberana-table-header: #{$soberana-table-header};
+  --soberana-focus: #{$soberana-focus};
+}
+
+body {
+  font-family: $font-family;
+  background-color: $soberana-bg;
+  color: $soberana-gray-900;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family;
+  color: $soberana-gray-900;
+}

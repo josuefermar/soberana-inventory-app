@@ -111,13 +111,13 @@ const shape = {
 };
 
 const typography = {
-  fontFamily: '"Inter", "Roboto", sans-serif',
-  h1: { fontWeight: 600 },
-  h2: { fontWeight: 600 },
-  h3: { fontWeight: 600 },
-  h4: { fontWeight: 600 },
-  h5: { fontWeight: 600 },
-  h6: { fontWeight: 600 },
+  fontFamily: '"Open Sans", "Roboto", sans-serif',
+  h1: { fontWeight: 700, fontSize: '2rem' },
+  h2: { fontWeight: 600, fontSize: '1.75rem' },
+  h3: { fontWeight: 600, fontSize: '1.5rem' },
+  h4: { fontWeight: 600, fontSize: '1.25rem' },
+  h5: { fontWeight: 600, fontSize: '1.125rem' },
+  h6: { fontWeight: 600, fontSize: '1rem' },
   body1: { fontWeight: 400 },
   button: {
     textTransform: 'none',
@@ -156,8 +156,9 @@ const getComponentOverrides = (palette) => ({
   MuiAppBar: {
     styleOverrides: {
       root: {
-        backgroundColor: palette.primary.main,
-        color: palette.primary.contrastText,
+        backgroundColor: palette.mode === 'light' ? '#FFFFFF' : palette.background.paper,
+        color: palette.text.primary,
+        boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
       },
     },
   },

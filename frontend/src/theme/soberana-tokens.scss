@@ -1,0 +1,40 @@
+// Soberana S.A.S — Design tokens
+// Tradición, nutrición y bienestar familiar
+
+// Colors
+$soberana-green: #2E8B3C;
+$soberana-green-light: #4CAF50;
+$soberana-green-dark: #1B6E33;
+$soberana-grain: #F4C430;
+$soberana-grain-light: #FFD95A;
+$soberana-grain-dark: #E6B800;
+$soberana-white: #FFFFFF;
+$soberana-bg: #FAFAFA;
+$soberana-gray-100: #F5F5F5;
+$soberana-gray-200: #EEEEEE;
+$soberana-gray-300: #E0E0E0;
+$soberana-gray-500: #9E9E9E;
+$soberana-gray-700: #616161;
+$soberana-gray-900: #212121;
+$soberana-border: #E0E0E0;
+$soberana-table-header: #F5F5F5;
+$soberana-focus: $soberana-green;
+
+// Typography
+$font-family: 'Open Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-size-base: 1rem;
+$line-height-base: 1.5;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Spacing
+$spacing-unit: 8px;
+$radius: 8px;
+$radius-lg: 12px;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
