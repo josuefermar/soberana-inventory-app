@@ -21,6 +21,7 @@ class LoginUseCase:
             data={
                 "sub": str(user.id),
                 "role": user.role.value,
+                "name": user.name,
                 "warehouses": [str(warehouse) for warehouse in user.warehouses]
             },
         )

@@ -55,7 +55,7 @@ export function AppRouter() {
         <Route
           path="admin-sessions"
           element={
-            <RoleGuard allowedRoles={['ADMIN', 'PROCESS_LEADER']}>
+            <RoleGuard allowedRoles={['ADMIN', 'PROCESS_LEADER', 'WAREHOUSE_MANAGER']}>
               <AdminSessionsPage />
             </RoleGuard>
           }
@@ -79,7 +79,7 @@ export function AppRouter() {
         <Route
           path="view-counts/:sessionId"
           element={
-            <RoleGuard allowedRoles={['ADMIN', 'PROCESS_LEADER']}>
+            <RoleGuard allowedRoles={['ADMIN']}>
               <ViewCountsPage />
             </RoleGuard>
           }

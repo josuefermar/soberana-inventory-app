@@ -33,7 +33,7 @@ export function Navbar() {
           <>
             <div className={styles.spacer} />
             <Typography variant="body2" className={styles.role}>
-              {user.role}
+              {user.name || user.role}
             </Typography>
             <LanguageSelector />
             <Button className={styles.logoutBtn} onClick={handleLogout}>

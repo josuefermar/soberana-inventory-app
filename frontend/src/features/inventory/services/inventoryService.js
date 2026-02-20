@@ -27,6 +27,15 @@ export async function listSessions(params = {}) {
 }
 
 /**
+ * @param {string} sessionId
+ * @returns {Promise<import('./types').SessionListItem>}
+ */
+export async function getSession(sessionId) {
+  const { data } = await apiClient.get(`/inventory-sessions/${sessionId}`);
+  return data;
+}
+
+/**
  * @param {import('./types').CreateSessionPayload} payload
  * @returns {Promise<{ id: string }>}
  */
@@ -48,7 +57,7 @@ export async function getSessionProducts(sessionId) {
 
 /**
  * @param {string} sessionId
- * @param {{ product_id: string; packaging_quantity: number }} payload
+ * @param {{ product_id: string; packaging_quantity: number; measure_unit_id?: string }} payload
  * @returns {Promise<{ total_units: number }>}
  */
 export async function registerCount(sessionId, payload) {

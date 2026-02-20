@@ -22,7 +22,7 @@ const navItems = [
     to: '/admin-sessions',
     icon: InventoryIcon,
     labelKey: 'dashboard.inventorySessions',
-    roles: [ROLES.ADMIN, ROLES.PROCESS_LEADER],
+    roles: [ROLES.ADMIN, ROLES.PROCESS_LEADER, ROLES.WAREHOUSE_MANAGER],
   },
   {
     to: '/create-session',

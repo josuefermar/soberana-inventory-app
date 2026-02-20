@@ -20,6 +20,8 @@
     "email": "Email",
     "role": "Role",
     "password": "Password",
+    "newPassword": "New password",
+    "newPasswordPlaceholder": "Leave blank to keep current",
     "warehouses": "Warehouses",
     "warehousesPlaceholder": "Select warehouses",
     "active": "Active",
@@ -83,7 +85,12 @@
     "productsPlaceholder": "Search and select products",
     "productsAdded": "Products added",
     "addAtLeastOneProduct": "Add at least one product with quantity.",
-    "createAnother": "Create another session"
+    "countsRegistered": "{{count}} count(s) registered.",
+    "registerCounts": "Register counts",
+    "registerCountsSubmitting": "Registering...",
+    "createAnother": "Create another session",
+    "cancel": "Cancel",
+    "registerCountSubtitle": "{{warehouse}} — {{month}}"
   },
   "products": {
     "title": "Products",
@@ -110,8 +117,7 @@
     "viewCounts": "View Counts",
     "inventorySessions": "Inventory Sessions",
     "measurementUnits": "Measurement Units",
-    "featureFlags": "Feature Flags",
-    "enterSessionId": "Enter session ID (UUID):"
+    "featureFlags": "Feature Flags"
   },
   "measures": {
     "title": "Measurement Units",

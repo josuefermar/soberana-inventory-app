@@ -3,21 +3,26 @@ import { FormControlLabel, Switch } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { AppDialog, AppButton, AppTextField } from '../../../components/ui';
 import { AppSelect } from '../../../components/ui/Select';
+import { WarehouseAutocomplete } from '../../warehouses/components';
 import { ROLE_OPTIONS, getRoleLabel } from '../../../constants';
 
 /**
  * Dialog to edit an existing user. Handles form state and submit; API is called via onSave from parent hook.
+ * Supports warehouses (multi-select) and optional new password (not shown; leave blank to keep current).
  * @param {Object} props
  * @param {boolean} props.open
  * @param {() => void} props.onClose
  * @param {import('../services/types').User | null} props.user
  * @param {(userId: string, payload: import('../services/types').UpdateUserPayload) => Promise<void>} props.onSave
+ * @param {Array<{ id: string; label: string }>} [props.warehouseOptions] - Options for warehouse multi-select
  */
-export function EditUserDialog({ open, onClose, user, onSave }) {
+export function EditUserDialog({ open, onClose, user, onSave, warehouseOptions = [] }) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
+  const [warehouses, setWarehouses] = useState([]);
+  const [newPassword, setNewPassword] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
@@ -26,6 +31,12 @@ export function EditUserDialog({ open, onClose, user, onSave }) {
       setName(user.name ?? '');
       setEmail(user.email ?? '');
       setRole(user.role ?? '');
+      setWarehouses(
+        Array.isArray(user.warehouses)
+          ? user.warehouses.map((w) => (typeof w === 'object' && w?.id != null ? w.id : w))
+          : []
+      );
+      setNewPassword('');
       setIsActive(user.is_active ?? true);
       setSubmitting(false);
     }
@@ -36,7 +47,17 @@ export function EditUserDialog({ open, onClose, user, onSave }) {
     if (!user) return;
     setSubmitting(true);
     try {
-      await onSave(user.id, { name, email, role, is_active: isActive });
+      const payload = {
+        name,
+        email,
+        role,
+        is_active: isActive,
+        warehouses,
+      };
+      if (newPassword.trim() !== '') {
+        payload.password = newPassword.trim();
+      }
+      await onSave(user.id, payload);
       onClose();
     } catch (_) {
       // Snackbar handled by hook
@@ -94,6 +115,25 @@ export function EditUserDialog({ open, onClose, user, onSave }) {
           onChange={(e) => setRole(e.target.value)}
           margin="dense"
           options={roleOptions}
+        />
+        <WarehouseAutocomplete
+          label={t('users.warehouses')}
+          placeholder={t('users.warehousesPlaceholder')}
+          options={warehouseOptions}
+          valueIds={warehouses}
+          onChange={(ids) => setWarehouses(Array.isArray(ids) ? ids : [])}
+          margin="dense"
+          multiple
+        />
+        <AppTextField
+          label={t('users.newPassword')}
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          margin="dense"
+          fullWidth
+          placeholder={t('users.newPasswordPlaceholder')}
+          autoComplete="new-password"
         />
         <FormControlLabel
           control={

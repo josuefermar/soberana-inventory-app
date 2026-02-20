@@ -4,6 +4,8 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session, joinedload
 
+from app.application.use_cases.user_managment.dto import UserListDto, WarehouseRef
+from app.application.use_cases.user_managment.user_list_query import UserListQuery
 from app.domain.entities.user import User
 from app.domain.entities.user_role import UserRole
 from app.domain.repositories.user_repository import UserRepository
@@ -11,7 +13,7 @@ from app.infrastructure.models.user_model import UserModel
 from app.infrastructure.models.warehouse_model import WarehouseModel
 
 
-class UserRepositoryImpl(UserRepository):
+class UserRepositoryImpl(UserRepository, UserListQuery):
 
     def __init__(self, db: Session):
         self.db = db
@@ -104,6 +106,41 @@ class UserRepositoryImpl(UserRepository):
 
     def count(self) -> int:
         return self.db.query(UserModel).count()
+
+    def list_all_with_warehouses(self) -> list[UserListDto]:
+        models = (
+            self.db.query(UserModel)
+            .options(joinedload(UserModel.warehouses))
+            .order_by(UserModel.created_at.desc())
+            .all()
+        )
+        return [self._to_list_dto(m) for m in models]
+
+    def get_by_id_for_display(self, user_id: UUID) -> UserListDto | None:
+        model = (
+            self.db.query(UserModel)
+            .options(joinedload(UserModel.warehouses))
+            .filter(UserModel.id == user_id)
+            .first()
+        )
+        if not model:
+            return None
+        return self._to_list_dto(model)
+
+    def _to_list_dto(self, model: UserModel) -> UserListDto:
+        warehouses = [
+            WarehouseRef(id=cast(UUID, w.id), name=cast(str, w.description))
+            for w in model.warehouses
+        ]
+        return UserListDto(
+            id=cast(UUID, model.id),
+            identification=cast(str, model.identification),
+            name=cast(str, model.name),
+            email=cast(str, model.email),
+            role=cast(str, model.role),
+            warehouses=warehouses,
+            is_active=cast(bool, model.is_active),
+        )
 
     def _to_domain(self, model: UserModel) -> User:
         return User(

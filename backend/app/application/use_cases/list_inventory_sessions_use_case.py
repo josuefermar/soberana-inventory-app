@@ -35,11 +35,13 @@ class ListInventorySessionsUseCase:
     def execute(
         self,
         warehouse_id: Optional[UUID] = None,
+        warehouse_ids: Optional[List[UUID]] = None,
         month: Optional[datetime] = None,
         status: Optional[str] = None,
     ) -> List[InventorySessionSummary]:
         sessions = self.session_repository.list_filtered(
             warehouse_id=warehouse_id,
+            warehouse_ids=warehouse_ids,
             month=month,
             status=status,
         )

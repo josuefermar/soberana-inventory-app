@@ -1,5 +1,6 @@
 /**
- * @typedef {{ id: string; email: string; name: string; identification?: string; role: string; warehouses?: string[]; is_active: boolean }} User
+ * @typedef {{ id: string; name: string }} WarehouseRef
+ * @typedef {{ id: string; email: string; name: string; identification?: string; role: string; warehouses?: WarehouseRef[]; is_active: boolean }} User
  */
 
 /**

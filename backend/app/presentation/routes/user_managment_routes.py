@@ -63,25 +63,33 @@ class SyncFromApiPayload(BaseModel):
         return v
 
 
+class WarehouseRefResponse(BaseModel):
+    id: str
+    name: str
+
+
 class UserResponse(BaseModel):
     id: str
     identification: str
     name: str
     email: str
     role: str
-    warehouses: list[str]
+    warehouses: list[WarehouseRefResponse]
     is_active: bool
 
     @classmethod
-    def from_user(cls, user):
+    def from_user_list_dto(cls, dto):
         return cls(
-            id=str(user.id),
-            identification=user.identification,
-            name=user.name,
-            email=user.email,
-            role=user.role.value,
-            warehouses=[str(w) for w in user.warehouses],
-            is_active=user.is_active,
+            id=str(dto.id),
+            identification=dto.identification,
+            name=dto.name,
+            email=dto.email,
+            role=dto.role,
+            warehouses=[
+                WarehouseRefResponse(id=str(w.id), name=w.name)
+                for w in dto.warehouses
+            ],
+            is_active=dto.is_active,
         )
 
 
@@ -167,8 +175,8 @@ def list_users(
 ):
     repository = UserRepositoryImpl(db)
     use_case = ListUsersUseCase(repository)
-    users = use_case.execute()
-    return [UserResponse.from_user(u) for u in users]
+    dtos = use_case.execute()
+    return [UserResponse.from_user_list_dto(dto) for dto in dtos]
 
 
 @router.post("/", response_model=UserResponse)
@@ -187,7 +195,8 @@ def create_user(
         request.password,
         request.warehouses,
     )
-    return UserResponse.from_user(user)
+    dto = repository.get_by_id_for_display(user.id)
+    return UserResponse.from_user_list_dto(dto)
 
 
 @router.put("/{user_id}", response_model=UserResponse)
@@ -199,7 +208,7 @@ def update_user(
 ):
     repository = UserRepositoryImpl(db)
     use_case = UpdateUserUseCase(repository)
-    user = use_case.execute(
+    use_case.execute(
         user_id,
         identification=request.identification,
         name=request.name,
@@ -209,4 +218,5 @@ def update_user(
         warehouse_ids=request.warehouses,
         is_active=request.is_active,
     )
-    return UserResponse.from_user(user)
+    dto = repository.get_by_id_for_display(user_id)
+    return UserResponse.from_user_list_dto(dto)

@@ -20,6 +20,8 @@
     "email": "Correo electrónico",
     "role": "Rol",
     "password": "Contraseña",
+    "newPassword": "Nueva contraseña",
+    "newPasswordPlaceholder": "Dejar en blanco para mantener la actual",
     "warehouses": "Almacenes",
     "warehousesPlaceholder": "Seleccionar almacenes",
     "active": "Activo",
@@ -83,7 +85,12 @@
     "productsPlaceholder": "Buscar y seleccionar productos",
     "productsAdded": "Productos añadidos",
     "addAtLeastOneProduct": "Añade al menos un producto con cantidad.",
-    "createAnother": "Crear otra sesión"
+    "countsRegistered": "{{count}} conteo(s) registrado(s).",
+    "registerCounts": "Registrar conteos",
+    "registerCountsSubmitting": "Registrando...",
+    "createAnother": "Crear otra sesión",
+    "cancel": "Cancelar",
+    "registerCountSubtitle": "{{warehouse}} — {{month}}"
   },
   "products": {
     "title": "Productos",
@@ -110,8 +117,7 @@
     "viewCounts": "Ver conteos",
     "inventorySessions": "Sesiones de inventario",
     "measurementUnits": "Unidades de medida",
-    "featureFlags": "Banderas de funcionalidad",
-    "enterSessionId": "Ingrese ID de sesión (UUID):"
+    "featureFlags": "Banderas de funcionalidad"
   },
   "measures": {
     "title": "Unidades de medida",

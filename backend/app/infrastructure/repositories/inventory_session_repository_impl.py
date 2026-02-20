@@ -65,12 +65,15 @@ class InventorySessionRepositoryImpl(InventorySessionRepository):
     def list_filtered(
         self,
         warehouse_id: Optional[UUID] = None,
+        warehouse_ids: Optional[List[UUID]] = None,
         month: Optional[datetime] = None,
         status: Optional[str] = None,
     ) -> List[InventorySession]:
         q = self.db.query(InventorySessionModel)
         if warehouse_id is not None:
             q = q.filter(InventorySessionModel.warehouse_id == warehouse_id)
+        if warehouse_ids is not None and len(warehouse_ids) > 0:
+            q = q.filter(InventorySessionModel.warehouse_id.in_(warehouse_ids))
         if month is not None:
             from calendar import monthrange
             from datetime import timedelta

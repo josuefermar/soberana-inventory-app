@@ -29,8 +29,9 @@ class InventorySessionRepository(ABC):
     def list_filtered(
         self,
         warehouse_id: Optional[UUID] = None,
+        warehouse_ids: Optional[List[UUID]] = None,
         month: Optional[datetime] = None,
         status: Optional[str] = None,
     ) -> List[InventorySession]:
-        """List sessions with optional filters. status: 'open' | 'closed'."""
+        """List sessions with optional filters. warehouse_ids restricts to those warehouses; status: 'open' | 'closed'."""
         pass

@@ -72,7 +72,7 @@ def list_inventory_sessions(
     month: str | None = Query(None, description="YYYY-MM"),
     status: str | None = Query(None, description="open | closed"),
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.PROCESS_LEADER])),
+    current_user=Depends(require_roles([UserRole.ADMIN, UserRole.PROCESS_LEADER, UserRole.WAREHOUSE_MANAGER])),
 ):
     month_dt = None
     if month:
@@ -83,6 +83,12 @@ def list_inventory_sessions(
                 month_dt = datetime(y, m, 1, tzinfo=timezone.utc)
         except (ValueError, IndexError):
             pass
+    warehouse_ids = None
+    if current_user.get("role") in (
+        UserRole.WAREHOUSE_MANAGER.value,
+        UserRole.PROCESS_LEADER.value,
+    ):
+        warehouse_ids = [UUID(w) for w in current_user.get("warehouses", [])]
     session_repo = InventorySessionRepositoryImpl(db)
     warehouse_repo = WarehouseRepositoryImpl(db)
     count_repo = InventoryCountRepositoryImpl(db)
@@ -92,6 +98,7 @@ def list_inventory_sessions(
     )
     summaries = use_case.execute(
         warehouse_id=warehouse_id,
+        warehouse_ids=warehouse_ids,
         month=month_dt,
         status=status,
     )
@@ -111,6 +118,49 @@ def list_inventory_sessions(
         )
         for s in summaries
     ]
+
+
+@router.get("/{session_id}", response_model=InventorySessionListResponse)
+def get_inventory_session(
+    session_id: UUID,
+    db: Session = Depends(get_db),
+    current_user=Depends(
+        require_roles([UserRole.ADMIN, UserRole.PROCESS_LEADER, UserRole.WAREHOUSE_MANAGER])
+    ),
+):
+    """Get a single inventory session by id (for header/subtitle in Register Count, etc.)."""
+    session_repo = InventorySessionRepositoryImpl(db)
+    warehouse_repo = WarehouseRepositoryImpl(db)
+    count_repo = InventoryCountRepositoryImpl(db)
+    user_repo = UserRepositoryImpl(db)
+
+    session = session_repo.get_by_id(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Inventory session not found")
+    if current_user.get("role") in (
+        UserRole.WAREHOUSE_MANAGER.value,
+        UserRole.PROCESS_LEADER.value,
+    ):
+        assert_warehouse_access(current_user, session.warehouse_id)
+
+    warehouse = warehouse_repo.get_by_id(session.warehouse_id)
+    warehouse_description = warehouse.description if warehouse else ""
+    products_count = count_repo.count_by_session(session_id)
+    creator = user_repo.get_by_id(session.created_by)
+
+    return InventorySessionListResponse(
+        id=session.id,
+        warehouse_id=session.warehouse_id,
+        warehouse_description=warehouse_description,
+        month=session.month,
+        count_number=session.count_number,
+        created_by_id=session.created_by,
+        created_by_name=creator.name if creator else "",
+        created_at=session.created_at,
+        closed_at=session.closed_at,
+        status="CLOSED" if session.closed_at else "OPEN",
+        products_count=products_count,
+    )
 
 
 @router.post("/", response_model=InventorySessionResponse)
@@ -280,9 +330,16 @@ def register_inventory_count(
 def list_inventory_counts(
     session_id: UUID,
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.PROCESS_LEADER])),
+    current_user=Depends(
+        require_roles([UserRole.ADMIN, UserRole.PROCESS_LEADER, UserRole.WAREHOUSE_MANAGER])
+    ),
 ):
     session_repo = InventorySessionRepositoryImpl(db)
+    session = session_repo.get_by_id(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Inventory session not found")
+    if current_user.get("role") == UserRole.WAREHOUSE_MANAGER.value:
+        assert_warehouse_access(current_user, session.warehouse_id)
     count_repo = InventoryCountRepositoryImpl(db)
     product_repo = ProductRepositoryImpl(db)
     unit_repo = MeasurementUnitRepositoryImpl(db)

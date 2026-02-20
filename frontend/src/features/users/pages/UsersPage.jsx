@@ -64,7 +64,9 @@ export function UsersPage() {
       name: u.name,
       identification: u.identification ?? '',
       role: getRoleLabel(u.role),
-      warehouses: Array.isArray(u.warehouses) ? u.warehouses.join(', ') : '',
+      warehouses: Array.isArray(u.warehouses)
+        ? u.warehouses.map((w) => (typeof w === 'object' && w?.name != null ? w.name : w)).join(', ')
+        : '',
       is_active: (
         <Chip
           label={u.is_active ? t('users.yes') : t('users.no')}
@@ -192,6 +194,7 @@ export function UsersPage() {
         onClose={closeEdit}
         user={editingUser}
         onSave={handleUpdate}
+        warehouseOptions={form.warehouseOptions ?? []}
       />
 
       <AppDialog

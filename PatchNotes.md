@@ -4,7 +4,17 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.13 (WIP)
+## v0.0.14 (WIP)
+
+- [feature] Backend: JWT payload includes user name; ListInventorySessionsUseCase and list_filtered accept warehouse_ids (sessions scoped by role); WAREHOUSE_MANAGER can list sessions and list counts (warehouse access); GET /inventory-sessions/{id} for single session; PROCESS_LEADER can list warehouses
+- [feature] Backend: user list read model — UserListDto, WarehouseRef, UserListQuery (list_all_with_warehouses, get_by_id_for_display); UserRepositoryImpl implements UserListQuery with joinedload; GET /users/ and create/update return warehouses as { id, name }
+- [feature] Frontend: admin-sessions for WAREHOUSE_MANAGER; view-counts only ADMIN; Navbar and Dashboard show user.name; Dashboard WAREHOUSE_MANAGER/PROCESS_LEADER cards navigate to /admin-sessions (no session ID prompt)
+- [feature] Frontend: useSession hook and getSession(sessionId) API; RegisterCountPage redesign — session subtitle (warehouse, month), ProductCountTable rows, same flow as Create Session; useRegisterCount rows-based (handleSubmit(e, rows, validate)), multiple counts, countUtils.toPackagingQuantity
+- [feature] Frontend: AdminSessionsPage — actions per row: View, View Counts (ADMIN), Register Count (ADMIN/WAREHOUSE_MANAGER); navigate to view-counts or register-count
+- [feature] Frontend: EditUserDialog — warehouse multi-select (WarehouseAutocomplete), optional new password; UsersPage passes warehouseOptions; User.warehouses as { id, name }
+- [feature] Frontend: countUtils.toPackagingQuantity shared by useCreateSession and useRegisterCount; i18n registerCountSubtitle, countsRegistered, registerCounts, newPassword, cancel (en/es); remove enterSessionId
+
+## v0.0.13
 
 - [feature] Backend: CreateInventorySessionUseCase — warehouse access check (non-admin only for assigned warehouses); routes pass user_warehouse_ids and is_admin
 - [feature] Backend: ListWarehousesUseCase(warehouse_ids); WarehouseRepository.list_by_ids; GET /warehouses/ returns only assigned warehouses for WAREHOUSE_MANAGER

@@ -18,12 +18,17 @@ router = APIRouter(prefix="/warehouses", tags=["Warehouses"])
 @router.get("/", response_model=list[WarehouseResponse])
 def list_warehouses(
     db: Session = Depends(get_db),
-    current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
+    current_user=Depends(
+        require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER, UserRole.PROCESS_LEADER])
+    ),
 ):
     repository = WarehouseRepositoryImpl(db)
     use_case = ListWarehousesUseCase(repository)
     warehouse_ids = None
-    if current_user.get("role") == UserRole.WAREHOUSE_MANAGER.value:
+    if current_user.get("role") in (
+        UserRole.WAREHOUSE_MANAGER.value,
+        UserRole.PROCESS_LEADER.value,
+    ):
         warehouse_ids = [UUID(w) for w in current_user.get("warehouses", [])]
     warehouses = use_case.execute(warehouse_ids=warehouse_ids)
     return [

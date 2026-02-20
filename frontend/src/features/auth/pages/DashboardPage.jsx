@@ -23,16 +23,14 @@ export function DashboardPage() {
   const { t } = useTranslation();
   const role = user?.role ?? '';
 
-  const handleSessionPrompt = (pathPrefix) => {
-    const sessionId = prompt(t('dashboard.enterSessionId'));
-    if (sessionId) navigate(`${pathPrefix}/${sessionId}`);
-  };
-
   return (
     <PageContainer maxWidth="lg">
       <section className={styles.welcomeSection}>
         <Typography variant="h4" className={styles.pageTitle}>
           {t('dashboard.welcome')}
+        </Typography>
+        <Typography variant="body1" className={styles.subtitle}>
+          {user?.name || '—'}
         </Typography>
         <Typography variant="body1" className={styles.subtitle}>
           {t('dashboard.role')}: <strong>{role}</strong>
@@ -118,10 +116,10 @@ export function DashboardPage() {
             <DashboardCard
               icon={<RegisterCountIcon fontSize="medium" />}
               title={t('dashboard.registerCount')}
-              description={t('products.title')}
+              description={t('inventorySessions.adminSessionsTitle')}
               accent="grain"
               action={
-                <AppButton size="small" variant="outlined" onClick={() => handleSessionPrompt('/register-count')}>
+                <AppButton size="small" variant="outlined" onClick={() => navigate('/admin-sessions')}>
                   {t('dashboard.registerCount')}
                 </AppButton>
               }
@@ -131,12 +129,12 @@ export function DashboardPage() {
         {role === ROLES.PROCESS_LEADER && (
           <DashboardCard
             icon={<ViewCountsIcon fontSize="medium" />}
-            title={t('dashboard.viewCounts')}
-            description={t('dashboard.viewCounts')}
+            title={t('inventorySessions.view')}
+            description={t('inventorySessions.adminSessionsTitle')}
             accent="green"
             action={
-              <AppButton size="small" onClick={() => handleSessionPrompt('/view-counts')}>
-                {t('dashboard.viewCounts')}
+              <AppButton size="small" onClick={() => navigate('/admin-sessions')}>
+                {t('inventorySessions.view')}
               </AppButton>
             }
           />

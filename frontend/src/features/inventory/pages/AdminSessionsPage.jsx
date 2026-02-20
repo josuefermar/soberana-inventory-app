@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../../context/AuthContext';
+import { ROLES } from '../../../constants';
 import { PageContainer } from '../../../components/layout';
 import {
   AppButton,
@@ -37,6 +40,9 @@ function useColumns() {
 
 export function AdminSessionsPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const role = user?.role ?? '';
   const [warehouseOptions, setWarehouseOptions] = useState([]);
   const [selectedSession, setSelectedSession] = useState(null);
   const [openDetailModal, setOpenDetailModal] = useState(false);
@@ -74,6 +80,9 @@ export function AdminSessionsPage() {
     setSelectedSession(null);
   }, []);
 
+  const canViewCounts = role === ROLES.ADMIN;
+  const canRegisterCount = role === ROLES.ADMIN || role === ROLES.WAREHOUSE_MANAGER;
+
   const rows = sessions.map((s) => ({
     id: s.id,
     warehouse_description: s.warehouse_description || '—',
@@ -83,9 +92,21 @@ export function AdminSessionsPage() {
     closed_at: formatDate(s.closed_at),
     products_count: s.products_count ?? 0,
     actions: (
-      <AppButton size="small" variant="outlined" onClick={() => handleViewSession(s)}>
-        {t('inventorySessions.view')}
-      </AppButton>
+      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+        <AppButton size="small" variant="outlined" onClick={() => handleViewSession(s)}>
+          {t('inventorySessions.view')}
+        </AppButton>
+        {canViewCounts && (
+          <AppButton size="small" variant="outlined" onClick={() => navigate(`/view-counts/${s.id}`)}>
+            {t('dashboard.viewCounts')}
+          </AppButton>
+        )}
+        {canRegisterCount && (
+          <AppButton size="small" variant="outlined" onClick={() => navigate(`/register-count/${s.id}`)}>
+            {t('dashboard.registerCount')}
+          </AppButton>
+        )}
+      </Box>
     ),
   }));
 
