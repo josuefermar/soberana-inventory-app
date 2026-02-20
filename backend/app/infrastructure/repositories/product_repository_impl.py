@@ -18,6 +18,26 @@ class ProductRepositoryImpl(ProductRepository):
             return None
         return self._to_domain(model)
 
+    def count(self) -> int:
+        return self.db.query(ProductModel).count()
+
+    def save(self, product: Product) -> Product:
+        model = ProductModel(
+            id=product.id,
+            code=product.code,
+            description=product.description,
+            inventory_unit_id=product.inventory_unit,
+            packaging_unit_id=product.packaging_unit,
+            conversion_factor=product.conversion_factor,
+            is_active=product.is_active,
+            created_at=product.created_at,
+            updated_at=product.updated_at,
+        )
+        self.db.add(model)
+        self.db.commit()
+        self.db.refresh(model)
+        return self._to_domain(model)
+
     def _to_domain(self, model: ProductModel) -> Product:
         from datetime import datetime
 

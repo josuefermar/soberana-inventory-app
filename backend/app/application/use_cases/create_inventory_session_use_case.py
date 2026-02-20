@@ -17,6 +17,12 @@ class CreateInventorySessionUseCase:
         created_by: UUID
     ) -> InventorySession:
 
+        now_utc = datetime.now(timezone.utc)
+        if now_utc.day > 3:
+            raise BusinessRuleViolation(
+                "Inventory sessions can only be created during the first 3 days of the month."
+            )
+
         if count_number not in [1, 2, 3]:
             raise BusinessRuleViolation("Count number must be 1, 2 or 3")
         

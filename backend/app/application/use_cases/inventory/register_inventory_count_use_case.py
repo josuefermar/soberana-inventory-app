@@ -31,14 +31,16 @@ class RegisterInventoryCountUseCase:
         product_id: UUID,
         packaging_quantity: int,
         user_warehouse_ids: list[UUID],
+        is_admin: bool = False,
     ) -> InventoryCount:
         session = self.session_repository.get_by_id(session_id)
         if not session:
             raise NotFoundException("Inventory session not found")
 
-        if session.warehouse_id not in user_warehouse_ids:
+        warehouse_id = session.warehouse_id
+        if not is_admin and warehouse_id not in user_warehouse_ids:
             raise BusinessRuleViolation(
-                "You are not assigned to the warehouse of this inventory session"
+                "User does not have access to this warehouse."
             )
 
         product = self.product_repository.get_by_id(product_id)

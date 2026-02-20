@@ -19,6 +19,11 @@
 - [config] CI: frontend-ci — concurrency cancel-in-progress, working-directory frontend, simplified npm steps
 - [config] CI: docker-ci — concurrency cancel-in-progress, explicit Dockerfile paths for backend/frontend, workflow in trigger paths
 - [bugfix] Backend: type-safe exception handlers in main.py (cast to ExceptionHandler for add_exception_handler)
+- [feature] Backend: inventory sessions only creatable in first 3 days of month (CreateInventorySessionUseCase business rule)
+- [feature] Backend: ADMIN can register inventory counts for any warehouse; warehouse check bypass when is_admin, clearer access-denied message
+- [feature] Backend: MeasurementUnitRepository (domain + impl) with count, get_by_name, save; ProductRepository extended with count/save; WarehouseRepository (domain + impl) with count/save
+- [feature] Backend: master data seeder — warehouses (Cereté, Central, Valledupar, Maicao) and products P001–P015 when tables empty; AUTO_SEED_MASTER_DATA startup hook in main.py
+- [feature] Backend: POST /inventory-sessions/{id}/counts allowed for ADMIN and WAREHOUSE_MANAGER; is_admin passed to RegisterInventoryCountUseCase
 
 ## v0.0.1 
 

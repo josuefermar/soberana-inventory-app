@@ -60,7 +60,7 @@ def register_inventory_count(
     session_id: UUID,
     request: CreateInventoryCountRequest,
     db: Session = Depends(get_db),
-    current_user=Depends(require_roles([UserRole.WAREHOUSE_MANAGER])),
+    current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
 ):
     session_repo = InventorySessionRepositoryImpl(db)
     product_repo = ProductRepositoryImpl(db)
@@ -68,11 +68,13 @@ def register_inventory_count(
     use_case = RegisterInventoryCountUseCase(session_repo, product_repo, count_repo)
 
     user_warehouse_ids = [UUID(w) for w in current_user.get("warehouses", [])]
+    is_admin = current_user.get("role") == UserRole.ADMIN.value
     count = use_case.execute(
         session_id=session_id,
         product_id=request.product_id,
         packaging_quantity=request.packaging_quantity,
         user_warehouse_ids=user_warehouse_ids,
+        is_admin=is_admin,
     )
 
     product = product_repo.get_by_id(count.product_id)

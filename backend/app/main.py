@@ -10,6 +10,7 @@ from fastapi import FastAPI
 from starlette.types import ExceptionHandler
 
 from app.domain.exceptions.business_exceptions import BusinessRuleViolation, NotFoundException
+from app.infrastructure.seeders.master_data_seeder import seed_master_data_if_empty
 from app.infrastructure.seeders.user_seeder import seed_users_if_empty
 from app.presentation.exception_handlers import (
     business_rule_exception_handler,
@@ -23,6 +24,8 @@ from app.presentation.routes.user_managment_routes import router as user_managme
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    if os.getenv("AUTO_SEED_MASTER_DATA", "").lower() == "true":
+        await seed_master_data_if_empty()
     if os.getenv("AUTO_SYNC_USERS", "").lower() == "true":
         await seed_users_if_empty()
     yield
