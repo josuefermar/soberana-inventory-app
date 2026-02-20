@@ -12,8 +12,11 @@
     "syncUsers": "Sincronizar usuarios",
     "syncing": "Sincronizando...",
     "createUser": "Crear usuario",
+    "editUser": "Editar usuario",
     "cancel": "Cancelar",
     "create": "Crear",
+    "save": "Guardar",
+    "inactive": "Inactivo",
     "identification": "Identificación",
     "name": "Nombre",
     "email": "Correo electrónico",
@@ -22,9 +25,19 @@
     "warehouses": "Almacenes",
     "warehousesPlaceholder": "Seleccionar almacenes",
     "active": "Activo",
+    "actions": "Acciones",
+    "edit": "Editar",
+    "activate": "Activar",
     "yes": "Sí",
     "no": "No",
     "userCreated": "Usuario creado",
+    "userUpdated": "Usuario actualizado",
+    "userActivated": "Usuario activado",
+    "userDeactivated": "Usuario desactivado",
+    "cannotEditSelf": "No puedes modificar tu propio usuario",
+    "deactivate": "Desactivar",
+    "confirmDeactivateTitle": "¿Desactivar usuario?",
+    "confirmDeactivateMessage": "¿Estás seguro de que quieres desactivar a {{name}}?",
     "synced": "Sincronizado. Usuarios creados: {{count}}"
   },
   "inventorySessions": {
@@ -84,6 +97,7 @@
     "viewCounts": "Ver conteos",
     "inventorySessions": "Sesiones de inventario",
     "measurementUnits": "Unidades de medida",
+    "featureFlags": "Banderas de funcionalidad",
     "enterSessionId": "Ingrese ID de sesión (UUID):"
   },
   "measures": {
@@ -118,6 +132,7 @@
   },
   "common": {
     "logout": "Cerrar sesión",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "saving": "Guardando..."
   }
 }

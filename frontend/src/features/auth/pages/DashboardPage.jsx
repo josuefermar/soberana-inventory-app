@@ -35,6 +35,9 @@ export function DashboardPage() {
             <AppButton onClick={() => navigate('/measures')}>
               {t('dashboard.measurementUnits')}
             </AppButton>
+            <AppButton onClick={() => navigate('/feature-flags')}>
+              {t('dashboard.featureFlags')}
+            </AppButton>
             <AppButton
               variant="outlined"
               color="secondary"

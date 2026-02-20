@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Chip, Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
 import {
@@ -9,8 +9,9 @@ import {
   AppTextField,
 } from '../../../components/ui';
 import { AppSelect } from '../../../components/ui/Select';
-import { ROLE_OPTIONS } from '../../../constants';
+import { ROLE_OPTIONS, getRoleLabel } from '../../../constants';
 import { WarehouseAutocomplete } from '../../warehouses/components';
+import { EditUserDialog } from '../components';
 import { useUsers } from '../hooks';
 
 function useUserColumns() {
@@ -22,6 +23,7 @@ function useUserColumns() {
     { id: 'role', label: t('users.role') },
     { id: 'warehouses', label: t('users.warehouses') },
     { id: 'is_active', label: t('users.active') },
+    { id: 'actions', label: t('users.actions') },
   ];
 }
 
@@ -33,25 +35,77 @@ export function UsersPage() {
     syncLoading,
     createOpen,
     setCreateOpen,
+    editOpen,
+    closeEdit,
+    editingUser,
     form,
     setForm,
     loadUsers,
     handleSync,
     handleCreate,
+    handleUpdate,
+    handleToggle,
+    openEdit,
+    confirmDeactivateOpen,
+    userToDeactivate,
+    closeConfirmDeactivate,
+    confirmDeactivate,
+    currentUserId,
     snack,
     closeSnack,
   } = useUsers();
   const USER_COLUMNS = useUserColumns();
 
-  const tableRows = users.map((u) => ({
-    id: u.id,
-    email: u.email,
-    name: u.name,
-    identification: u.identification ?? '',
-    role: u.role,
-    warehouses: Array.isArray(u.warehouses) ? u.warehouses.join(', ') : '',
-    is_active: u.is_active ? t('users.yes') : t('users.no'),
-  }));
+  const roleOptions = ROLE_OPTIONS.map((r) => ({ value: r, label: getRoleLabel(r) }));
+
+  const tableRows = users.map((u) => {
+    const isSelf = currentUserId != null && u.id === currentUserId;
+    return {
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      identification: u.identification ?? '',
+      role: getRoleLabel(u.role),
+      warehouses: Array.isArray(u.warehouses) ? u.warehouses.join(', ') : '',
+      is_active: (
+        <Chip
+          label={u.is_active ? t('users.yes') : t('users.no')}
+          size="small"
+          color={u.is_active ? 'success' : 'default'}
+          variant="outlined"
+        />
+      ),
+      actions: (
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Tooltip title={isSelf ? t('users.cannotEditSelf') : ''}>
+            <span>
+              <AppButton
+                size="small"
+                variant="outlined"
+                onClick={() => openEdit(u)}
+                disabled={isSelf}
+              >
+                {t('users.edit')}
+              </AppButton>
+            </span>
+          </Tooltip>
+          <Tooltip title={isSelf ? t('users.cannotEditSelf') : ''}>
+            <span>
+              <AppButton
+                size="small"
+                variant="outlined"
+                color="secondary"
+                onClick={() => handleToggle(u)}
+                disabled={isSelf}
+              >
+                {u.is_active ? t('users.deactivate') : t('users.activate')}
+              </AppButton>
+            </span>
+          </Tooltip>
+        </Box>
+      ),
+    };
+  });
 
   return (
     <PageContainer maxWidth="lg">
@@ -119,7 +173,7 @@ export function UsersPage() {
             value={form.role}
             onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
             margin="dense"
-            options={ROLE_OPTIONS.map((r) => ({ value: r, label: r }))}
+            options={roleOptions}
           />
           <AppTextField
             label={t('users.password')}
@@ -141,6 +195,37 @@ export function UsersPage() {
             multiple
           />
         </form>
+      </AppDialog>
+
+      <EditUserDialog
+        open={editOpen}
+        onClose={closeEdit}
+        user={editingUser}
+        onSave={handleUpdate}
+      />
+
+      <AppDialog
+        open={confirmDeactivateOpen}
+        onClose={closeConfirmDeactivate}
+        title={t('users.confirmDeactivateTitle')}
+        actions={
+          <>
+            <AppButton onClick={closeConfirmDeactivate} color="inherit">
+              {t('users.cancel')}
+            </AppButton>
+            <AppButton onClick={confirmDeactivate} color="warning">
+              {t('users.deactivate')}
+            </AppButton>
+          </>
+        }
+      >
+        {userToDeactivate && (
+          <Typography>
+            {t('users.confirmDeactivateMessage', {
+              name: userToDeactivate.name || userToDeactivate.email,
+            })}
+          </Typography>
+        )}
       </AppDialog>
 
       <AppSnackbar

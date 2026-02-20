@@ -12,8 +12,11 @@
     "syncUsers": "Sync Users",
     "syncing": "Syncing...",
     "createUser": "Create User",
+    "editUser": "Edit User",
     "cancel": "Cancel",
     "create": "Create",
+    "save": "Save",
+    "inactive": "Inactive",
     "identification": "Identification",
     "name": "Name",
     "email": "Email",
@@ -22,9 +25,19 @@
     "warehouses": "Warehouses",
     "warehousesPlaceholder": "Select warehouses",
     "active": "Active",
+    "actions": "Actions",
+    "edit": "Edit",
+    "activate": "Activate",
     "yes": "Yes",
     "no": "No",
     "userCreated": "User created",
+    "userUpdated": "User updated",
+    "userActivated": "User activated",
+    "userDeactivated": "User deactivated",
+    "cannotEditSelf": "You cannot modify your own user",
+    "deactivate": "Deactivate",
+    "confirmDeactivateTitle": "Deactivate user?",
+    "confirmDeactivateMessage": "Are you sure you want to deactivate {{name}}?",
     "synced": "Synced. Users created: {{count}}"
   },
   "inventorySessions": {
@@ -84,6 +97,7 @@
     "viewCounts": "View Counts",
     "inventorySessions": "Inventory Sessions",
     "measurementUnits": "Measurement Units",
+    "featureFlags": "Feature Flags",
     "enterSessionId": "Enter session ID (UUID):"
   },
   "measures": {
@@ -118,6 +132,7 @@
   },
   "common": {
     "logout": "Logout",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "saving": "Saving..."
   }
 }

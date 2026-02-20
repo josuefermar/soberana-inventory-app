@@ -4,7 +4,14 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.7 (WIP)
+## v0.0.8 (WIP)
+
+- [feature] Backend: feature flags use cases — ListFeatureFlagsUseCase, CreateFeatureFlagUseCase, UpdateFeatureFlagUseCase, ToggleFeatureFlagUseCase; repository get_all, get_by_id, update, toggle (key no longer used for update)
+- [feature] Backend: GET /feature-flags/, POST /feature-flags/ (CreateFeatureFlagRequest), PUT /feature-flags/{id} (UpdateFeatureFlagRequest), PATCH /feature-flags/{id}/toggle (ADMIN)
+- [feature] Frontend: Feature Flags admin — FeatureFlagsAdminPage (list, create, update, toggle); useFeatureFlags, featureFlagsService (getFlags, createFlag, updateFlag, toggleFlag); FeatureFlagFormModal; route /feature-flags (ADMIN); Dashboard link; i18n
+- [feature] Frontend: Users — EditUserDialog (name, email, role, is_active); useUsers extended with edit, deactivate (confirm dialog), updateUser; usersService.updateUser; ROLE_LABELS and getRoleLabel in constants/roles; i18n for users edit/cancel/save/role/active
+
+## v0.0.7
 
 - [feature] Backend: measurement units — entity description→abbreviation; repository list_all, get_by_id, get_by_abbreviation, update; CreateMeasurementUnitUseCase, UpdateMeasurementUnitUseCase, ToggleMeasurementUnitUseCase; ListMeasurementUnitsUseCase(active_only)
 - [feature] Backend: GET /measurement-units/?active_only, POST /measurement-units/, PUT /measurement-units/{id}, PATCH /measurement-units/{id}/toggle (ADMIN for write); response includes abbreviation, is_active

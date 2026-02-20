@@ -21,7 +21,7 @@ class FeatureFlagService:
 
     def list_all(self) -> List[FeatureFlag]:
         """Return all feature flags."""
-        return self._repository.list_all()
+        return self._repository.get_all()
 
     def set_enabled(self, key: str, enabled: bool) -> FeatureFlag:
         """Update the enabled state of a flag by key. Creates the flag if it does not exist (caller should seed)."""
