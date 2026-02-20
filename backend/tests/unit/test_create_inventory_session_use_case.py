@@ -25,6 +25,13 @@ class _FakeRepo:
         return session
 
 
+class _FakeFeatureFlagService:
+    """Returns False for is_enabled so date-restriction rule is not applied in these tests."""
+
+    def is_enabled(self, key: str) -> bool:
+        return False
+
+
 def _session(warehouse_id, month_year_month, count_number):
     y, m = month_year_month
     month = datetime(y, m, 1, tzinfo=timezone.utc)
@@ -43,7 +50,7 @@ def test_auto_count_number_first_session():
     """When no sessions exist for warehouse+month, count_number is 1."""
     wh_id = uuid4()
     repo = _FakeRepo({wh_id: []})
-    use_case = CreateInventorySessionUseCase(repo)
+    use_case = CreateInventorySessionUseCase(repo, _FakeFeatureFlagService())
     month = datetime(2025, 2, 1, tzinfo=timezone.utc)
     created_by = uuid4()
 
@@ -63,7 +70,7 @@ def test_auto_count_number_second_session():
     wh_id = uuid4()
     existing = [_session(wh_id, (2025, 2), 1)]
     repo = _FakeRepo({wh_id: existing})
-    use_case = CreateInventorySessionUseCase(repo)
+    use_case = CreateInventorySessionUseCase(repo, _FakeFeatureFlagService())
     month = datetime(2025, 2, 1, tzinfo=timezone.utc)
     created_by = uuid4()
 
@@ -85,7 +92,7 @@ def test_auto_count_number_third_session():
         _session(wh_id, (2025, 2), 2),
     ]
     repo = _FakeRepo({wh_id: existing})
-    use_case = CreateInventorySessionUseCase(repo)
+    use_case = CreateInventorySessionUseCase(repo, _FakeFeatureFlagService())
     month = datetime(2025, 2, 1, tzinfo=timezone.utc)
     created_by = uuid4()
 
@@ -108,7 +115,7 @@ def test_max_three_sessions_per_month_raises():
         _session(wh_id, (2025, 2), 3),
     ]
     repo = _FakeRepo({wh_id: existing})
-    use_case = CreateInventorySessionUseCase(repo)
+    use_case = CreateInventorySessionUseCase(repo, _FakeFeatureFlagService())
     month = datetime(2025, 2, 1, tzinfo=timezone.utc)
     created_by = uuid4()
 

@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { createAppTheme } from './theme/theme'
 import './index.css'
-import App from './App.tsx'
+import App from './app/App'
 
 const theme = createAppTheme('light')
 
