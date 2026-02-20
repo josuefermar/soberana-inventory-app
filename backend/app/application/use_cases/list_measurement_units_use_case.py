@@ -1,4 +1,4 @@
-"""List active measurement units for dropdowns and selection."""
+"""List measurement units: all for admin dashboard; active for dropdowns."""
 
 from typing import List
 
@@ -10,5 +10,7 @@ class ListMeasurementUnitsUseCase:
     def __init__(self, repository: MeasurementUnitRepository):
         self.repository = repository
 
-    def execute(self) -> List[MeasurementUnit]:
-        return self.repository.list_active()
+    def execute(self, active_only: bool = False) -> List[MeasurementUnit]:
+        if active_only:
+            return self.repository.list_active()
+        return self.repository.list_all()

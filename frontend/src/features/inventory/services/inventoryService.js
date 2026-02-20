@@ -9,10 +9,11 @@ export async function getProducts() {
 }
 
 /**
+ * @param {{ active_only?: boolean }} [params]
  * @returns {Promise<Array<import('./types').MeasureUnitItem>>}
  */
-export async function getMeasures() {
-  const { data } = await apiClient.get('/measurement-units/');
+export async function getMeasures(params = {}) {
+  const { data } = await apiClient.get('/measurement-units/', { params });
   return Array.isArray(data) ? data : [];
 }
 

@@ -83,7 +83,28 @@
     "registerCount": "Registrar conteo",
     "viewCounts": "Ver conteos",
     "inventorySessions": "Sesiones de inventario",
+    "measurementUnits": "Unidades de medida",
     "enterSessionId": "Ingrese ID de sesión (UUID):"
+  },
+  "measures": {
+    "title": "Unidades de medida",
+    "name": "Nombre",
+    "abbreviation": "Abreviación",
+    "status": "Estado",
+    "actions": "Acciones",
+    "refresh": "Actualizar",
+    "create": "Crear unidad de medida",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "activate": "Activar",
+    "deactivate": "Desactivar",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "created": "Unidad de medida creada",
+    "updated": "Unidad de medida actualizada",
+    "toggled": "Estado actualizado",
+    "nameAndAbbreviationRequired": "Nombre y abreviación son obligatorios"
   },
   "forms": {
     "required": "Requerido",

@@ -1,4 +1,5 @@
-# Dev: run Vite dev server so code changes reload automatically
+# Dev: run Vite dev server so code changes reload automatically.
+# Rebuild when package.json changes: docker compose build frontend
 FROM node:20-alpine
 
 WORKDIR /app
@@ -10,5 +11,5 @@ COPY . .
 
 EXPOSE 5173
 
-# Install deps at startup so the node_modules volume stays in sync with package.json
+# Run npm install on start so mounted package.json deps (e.g. @mui/icons-material) are in node_modules volume
 CMD ["sh", "-c", "npm install && npm run dev"]

@@ -59,9 +59,9 @@ def _seed_master_data_sync() -> None:
 
         if product_repo.count() == 0:
             now = datetime.now(timezone.utc)
-            und_id = _ensure_measurement_unit(unit_repo, "UND", "Unidad", now)
-            caja_id = _ensure_measurement_unit(unit_repo, "CAJA", "Caja", now)
-            arroba_id = _ensure_measurement_unit(unit_repo, "ARROBA", "Arroba", now)
+            und_id = _ensure_measurement_unit(unit_repo, "Unidad", "UND", now)
+            caja_id = _ensure_measurement_unit(unit_repo, "Caja", "CJ", now)
+            arroba_id = _ensure_measurement_unit(unit_repo, "Arroba", "ARR", now)
 
             packaging_units = [caja_id, caja_id, caja_id, arroba_id, arroba_id]
             factors = [6, 12, 24, 48]
@@ -110,16 +110,16 @@ async def seed_master_data_if_empty() -> None:
 def _ensure_measurement_unit(
     unit_repo: MeasurementUnitRepository,
     name: str,
-    description: str,
+    abbreviation: str,
     now: datetime,
 ) -> UUID:
-    existing = unit_repo.get_by_name(name)
+    existing = unit_repo.get_by_abbreviation(abbreviation)
     if existing:
         return existing.id
     unit = MeasurementUnit(
         id=uuid4(),
         name=name,
-        description=description,
+        abbreviation=abbreviation,
         is_active=True,
         created_at=now,
         updated_at=now,

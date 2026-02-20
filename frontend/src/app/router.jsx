@@ -9,6 +9,7 @@ import {
   RegisterCountPage,
   ViewCountsPage,
 } from '../features/inventory/pages';
+import { MeasuresPage } from '../features/measures/pages';
 
 /**
  * Application router. Composition only: Navbar + Routes.
@@ -34,6 +35,16 @@ export function AppRouter() {
             <PrivateRoute>
               <RoleGuard allowedRoles={['ADMIN']}>
                 <UsersPage />
+              </RoleGuard>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/measures"
+          element={
+            <PrivateRoute>
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <MeasuresPage />
               </RoleGuard>
             </PrivateRoute>
           }

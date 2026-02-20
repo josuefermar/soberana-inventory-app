@@ -53,6 +53,7 @@ services:
       - ./frontend:/app
       - /app/node_modules  # keep container node_modules, use host source
     working_dir: /app
+    command: ["sh", "-c", "npm install && npm run dev"]
 
 volumes:
   postgres_data:

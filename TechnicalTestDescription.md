@@ -1,5 +1,5 @@
 # Prueba Técnica – Desarrollador Fullstack  
-**Empresa:** Soberana SAS  
+**Empresa:** La Soberana SAS  
 **Fecha:** 15/02/2025  
 
 ---

@@ -4,7 +4,17 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.6 (WIP)
+## v0.0.7 (WIP)
+
+- [feature] Backend: measurement units — entity description→abbreviation; repository list_all, get_by_id, get_by_abbreviation, update; CreateMeasurementUnitUseCase, UpdateMeasurementUnitUseCase, ToggleMeasurementUnitUseCase; ListMeasurementUnitsUseCase(active_only)
+- [feature] Backend: GET /measurement-units/?active_only, POST /measurement-units/, PUT /measurement-units/{id}, PATCH /measurement-units/{id}/toggle (ADMIN for write); response includes abbreviation, is_active
+- [config] Backend: migration g01m2e3a4b5c6 — measurement_units add abbreviation, drop description, unique name/abbreviation; master_data_seeder uses name+abbreviation (e.g. UND, CJ, ARR)
+- [feature] Frontend: Measures feature — MeasuresPage (list, create, update, toggle); useMeasuresPage, measuresService (getMeasures, createMeasure, updateMeasure, toggleMeasure); route /measures (ADMIN); Dashboard link; i18n (en/es)
+- [feature] Frontend: inventory useMeasures and getMeasures use abbreviation and active_only; MeasureUnitItem type with abbreviation; ProductRow uses @mui/icons-material DeleteOutlined
+- [config] Frontend: package.json + @mui/icons-material; docker-compose frontend command npm install && npm run dev; Dockerfile.dev comment
+- [feature] Docs: PROJECT_STRUCTURE_AND_FLOW.md (root); BACKEND_STRUCTURE_AND_FLOW.md (backend); TechnicalTestDescription "La Soberana SAS"
+
+## v0.0.6
 
 - [feature] Backend: feature flags — entity, repository, FeatureFlagService (is_enabled, list_all, set_enabled); feature_flags table migration; seeder ENABLE_INVENTORY_DATE_RESTRICTION; GET /feature-flags, PATCH /feature-flags/{key} (ADMIN)
 - [feature] Backend: CreateInventorySessionUseCase — session creation date restriction (first 3 days) gated by feature flag ENABLE_INVENTORY_DATE_RESTRICTION; use case depends on FeatureFlagService

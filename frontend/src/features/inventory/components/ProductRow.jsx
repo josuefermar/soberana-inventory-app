@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
-import DeleteOutline from '@mui/icons-material/DeleteOutline';
+import { DeleteOutlined } from '@mui/icons-material';
 import { AppTextField } from '../../../components/ui';
 
 /**
@@ -134,7 +134,7 @@ export function ProductRow({
           color="error"
           size="small"
         >
-          <DeleteOutline />
+          <DeleteOutlined />
         </IconButton>
       </TableCell>
     </TableRow>

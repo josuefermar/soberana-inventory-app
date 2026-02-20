@@ -19,12 +19,12 @@ export function useMeasures() {
     setLoading(true);
     setError(null);
     try {
-      const list = await getMeasures();
+      const list = await getMeasures({ active_only: true });
       setMeasures(
         list.map((m) => ({
           id: m.id,
           name: m.name,
-          description: m.description ?? '',
+          abbreviation: m.abbreviation ?? '',
         }))
       );
     } catch (err) {

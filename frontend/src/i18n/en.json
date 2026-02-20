@@ -83,7 +83,28 @@
     "registerCount": "Register Count",
     "viewCounts": "View Counts",
     "inventorySessions": "Inventory Sessions",
+    "measurementUnits": "Measurement Units",
     "enterSessionId": "Enter session ID (UUID):"
+  },
+  "measures": {
+    "title": "Measurement Units",
+    "name": "Name",
+    "abbreviation": "Abbreviation",
+    "status": "Status",
+    "actions": "Actions",
+    "refresh": "Refresh",
+    "create": "Create Measurement Unit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "active": "Active",
+    "inactive": "Inactive",
+    "created": "Measurement unit created",
+    "updated": "Measurement unit updated",
+    "toggled": "Status updated",
+    "nameAndAbbreviationRequired": "Name and abbreviation are required"
   },
   "forms": {
     "required": "Required",

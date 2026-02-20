@@ -15,7 +15,7 @@
  */
 
 /**
- * @typedef {{ id: string; name: string; description?: string }} MeasureUnitItem
+ * @typedef {{ id: string; name: string; abbreviation: string; is_active?: boolean }} MeasureUnitItem
  */
 
 /**

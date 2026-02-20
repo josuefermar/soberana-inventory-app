@@ -32,6 +32,9 @@ export function DashboardPage() {
             <AppButton onClick={() => navigate('/admin-sessions')}>
               {t('dashboard.inventorySessions')}
             </AppButton>
+            <AppButton onClick={() => navigate('/measures')}>
+              {t('dashboard.measurementUnits')}
+            </AppButton>
             <AppButton
               variant="outlined"
               color="secondary"
