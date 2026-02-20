@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.infrastructure.database.database import Base, GUID
+from app.infrastructure.database.database import Base, GUID, utc_now
 
 
 class InventorySessionModel(Base):
@@ -12,7 +11,7 @@ class InventorySessionModel(Base):
     month = Column(DateTime, nullable=False)
     count_number = Column(Integer, nullable=False)
     created_by = Column(GUID(), ForeignKey("users.id"), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
     closed_at = Column(DateTime, nullable=True)
 
     warehouse = relationship("WarehouseModel", back_populates="sessions")

@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.infrastructure.database.database import Base, GUID
+from app.infrastructure.database.database import Base, GUID, utc_now
 
 
 class InventoryCountModel(Base):
@@ -12,7 +11,7 @@ class InventoryCountModel(Base):
     product_id = Column(GUID(), ForeignKey("products.id"), nullable=False)
     quantity_packages = Column(Integer, nullable=False)
     quantity_units = Column(Integer, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     session = relationship("InventorySessionModel", back_populates="counts")

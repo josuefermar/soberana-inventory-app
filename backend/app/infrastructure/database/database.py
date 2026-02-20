@@ -1,6 +1,12 @@
 import os
 import uuid
+from datetime import datetime, timezone
 from sqlalchemy import create_engine
+
+
+def utc_now() -> datetime:
+    """Timezone-aware UTC now (replaces deprecated datetime.utcnow)."""
+    return datetime.now(timezone.utc)
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import TypeDecorator, CHAR
 

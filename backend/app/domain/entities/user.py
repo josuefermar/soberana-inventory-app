@@ -11,6 +11,7 @@ class User:
     name: str
     email: str
     role: UserRole
+    hashed_password: str | None
     warehouses: list[UUID]
     is_active: bool
     last_login: datetime | None

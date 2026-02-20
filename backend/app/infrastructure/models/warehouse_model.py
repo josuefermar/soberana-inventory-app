@@ -1,7 +1,6 @@
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from app.infrastructure.database.database import Base, GUID
+from app.infrastructure.database.database import Base, GUID, utc_now
 from app.infrastructure.models.associations import user_warehouses
 
 
@@ -14,8 +13,8 @@ class WarehouseModel(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     status = Column(String, nullable=False)  # WarehouseStatus enum value
     status_description = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime, default=utc_now, nullable=False)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     users = relationship(
         "UserModel",
