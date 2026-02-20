@@ -4,7 +4,17 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.5 (WIP)
+## v0.0.6 (WIP)
+
+- [feature] Backend: feature flags — entity, repository, FeatureFlagService (is_enabled, list_all, set_enabled); feature_flags table migration; seeder ENABLE_INVENTORY_DATE_RESTRICTION; GET /feature-flags, PATCH /feature-flags/{key} (ADMIN)
+- [feature] Backend: CreateInventorySessionUseCase — session creation date restriction (first 3 days) gated by feature flag ENABLE_INVENTORY_DATE_RESTRICTION; use case depends on FeatureFlagService
+- [feature] Backend: MeasurementUnitRepository list_active(); ListMeasurementUnitsUseCase; GET /measurement-units (ADMIN, WAREHOUSE_MANAGER)
+- [feature] Backend: ProductResponse and list products API — include inventory_unit_id, packaging_unit_id, conversion_factor
+- [feature] Frontend: Create Session — ProductCountTable and ProductRow (product autocomplete, measure unit select, quantity, delete); useInventorySessionProducts, useMeasures, useProductsAutocomplete; useCreateSession refactor; CreateSessionPage uses new table and measures
+- [feature] Frontend: i18n — keys for create-session product/unit/quantity/actions labels (en/es)
+- [config] Backend: migrations — add feature_flags table (f16a0b8d5e6g)
+
+## v0.0.5
 
 - [feature] Backend: inventory session creation — count_number auto-assigned (1..3), month normalized to first-day UTC; CreateInventorySessionUseCase no longer accepts count_number
 - [feature] Backend: AddProductsToSessionUseCase — add products to session via 0-quantity counts; inventory_counts as single source of truth (UniqueConstraint session_id+product_id)

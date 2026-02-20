@@ -5,6 +5,7 @@ from app.infrastructure.models.user_model import UserModel
 from app.infrastructure.models.product_model import ProductModel
 from app.infrastructure.models.inventory_session_model import InventorySessionModel
 from app.infrastructure.models.inventory_count_model import InventoryCountModel
+from app.infrastructure.models.feature_flag_model import FeatureFlagModel
 
 __all__ = [
     "user_warehouses",
@@ -14,4 +15,5 @@ __all__ = [
     "ProductModel",
     "InventorySessionModel",
     "InventoryCountModel",
+    "FeatureFlagModel",
 ]

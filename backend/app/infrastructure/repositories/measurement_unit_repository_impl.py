@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, cast
+from typing import List, Optional, cast
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -15,6 +15,15 @@ class MeasurementUnitRepositoryImpl(MeasurementUnitRepository):
 
     def count(self) -> int:
         return self.db.query(MeasurementUnitModel).count()
+
+    def list_active(self) -> List[MeasurementUnit]:
+        models = (
+            self.db.query(MeasurementUnitModel)
+            .filter(MeasurementUnitModel.is_active == True)
+            .order_by(MeasurementUnitModel.name)
+            .all()
+        )
+        return [self._to_domain(m) for m in models]
 
     def get_by_name(self, name: str) -> Optional[MeasurementUnit]:
         model = (

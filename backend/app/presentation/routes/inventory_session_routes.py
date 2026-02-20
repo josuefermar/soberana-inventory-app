@@ -4,6 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
+from app.application.services.feature_flag_service import FeatureFlagService
 from app.application.use_cases.create_inventory_session_use_case import (
     CreateInventorySessionUseCase,
 )
@@ -22,6 +23,9 @@ from app.application.use_cases.list_session_products_from_counts_use_case import
 )
 from app.domain.entities.user_role import UserRole
 from app.infrastructure.logging.logger import logger
+from app.infrastructure.repositories.feature_flag_repository_impl import (
+    FeatureFlagRepositoryImpl,
+)
 from app.infrastructure.repositories.inventory_count_repository_impl import (
     InventoryCountRepositoryImpl,
 )
@@ -101,7 +105,9 @@ def create_inventory_session(
     _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
 ):
     repository = InventorySessionRepositoryImpl(db)
-    use_case = CreateInventorySessionUseCase(repository)
+    feature_flag_repo = FeatureFlagRepositoryImpl(db)
+    feature_flag_service = FeatureFlagService(feature_flag_repo)
+    use_case = CreateInventorySessionUseCase(repository, feature_flag_service)
 
     result = use_case.execute(
         warehouse_id=request.warehouse_id,

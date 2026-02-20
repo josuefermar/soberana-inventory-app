@@ -51,8 +51,13 @@
     "clearFilters": "Limpiar",
     "noSessions": "No hay sesiones",
     "addProducts": "Añadir productos a la sesión",
+    "addProduct": "Añadir producto",
+    "measureUnit": "Unidad de medida",
+    "quantity": "Cantidad",
     "productsPlaceholder": "Buscar y seleccionar productos",
-    "productsAdded": "Productos añadidos"
+    "productsAdded": "Productos añadidos",
+    "addAtLeastOneProduct": "Añade al menos un producto con cantidad.",
+    "createAnother": "Crear otra sesión"
   },
   "products": {
     "title": "Productos",

@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
 import { AppButton, AppSnackbar, AppTextField } from '../../../components/ui';
 import { WarehouseAutocomplete } from '../../warehouses/components';
-import { ProductAutocomplete } from '../../products/components';
-import { getProducts } from '../../products/services';
-import { useCreateSession } from '../hooks';
+import { ProductCountTable } from '../components';
+import {
+  useCreateSession,
+  useProductsAutocomplete,
+  useMeasures,
+  useInventorySessionProducts,
+} from '../hooks';
 
 export function CreateSessionPage() {
   const { t } = useTranslation();
-  const [productOptions, setProductOptions] = useState([]);
-  const [selectedProductIds, setSelectedProductIds] = useState([]);
   const {
     warehouse_id,
     setWarehouse_id,
@@ -21,32 +23,43 @@ export function CreateSessionPage() {
     warehouseOptions,
     handleSubmit,
     createdSessionId,
-    handleAddProducts,
     resetCreatedSession,
     snack,
     closeSnack,
   } = useCreateSession();
 
+  const {
+    options: productOptions,
+    loading: productOptionsLoading,
+    fetchOptions: fetchProducts,
+  } = useProductsAutocomplete();
+
+  const { measures: measureOptions, loading: measuresLoading } = useMeasures();
+
+  const {
+    rows,
+    addRow,
+    removeRow,
+    updateRow,
+    validationErrors,
+    validate,
+  } = useInventorySessionProducts();
+
   useEffect(() => {
-    getProducts()
-      .then((list) =>
-        setProductOptions(
-          list.map((p) => ({
-            id: p.id,
-            label: p.description || p.code || p.id,
-          }))
-        )
-      )
-      .catch(() => setProductOptions([]));
-  }, []);
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const onSubmit = (e) => {
+    handleSubmit(e, rows, validate);
+  };
 
   return (
-    <PageContainer maxWidth="sm">
+    <PageContainer maxWidth="md">
       <Typography variant="h5" gutterBottom>
         {t('inventorySessions.title')}
       </Typography>
       {!createdSessionId ? (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={onSubmit}>
           <WarehouseAutocomplete
             label={t('inventorySessions.warehouse')}
             placeholder={t('inventorySessions.warehousePlaceholder')}
@@ -65,31 +78,39 @@ export function CreateSessionPage() {
             InputLabelProps={{ shrink: true }}
             sx={{ mt: 2 }}
           />
-          <AppButton type="submit" sx={{ mt: 2 }} disabled={loading}>
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 2, mb: 1 }}>
+            {t('inventorySessions.addProducts')}
+          </Typography>
+          <ProductCountTable
+            rows={rows}
+            onUpdateRow={updateRow}
+            onRemoveRow={removeRow}
+            onAddRow={addRow}
+            productOptions={productOptions}
+            productOptionsLoading={productOptionsLoading}
+            onFetchProducts={fetchProducts}
+            measureOptions={measureOptions}
+            validationErrors={validationErrors}
+            addProductLabel={t('inventorySessions.addProduct')}
+            productColumnLabel={t('products.product')}
+            unitColumnLabel={t('inventorySessions.measureUnit')}
+            quantityColumnLabel={t('inventorySessions.quantity')}
+          />
+          <AppButton
+            type="submit"
+            sx={{ mt: 2 }}
+            disabled={loading || measuresLoading}
+          >
             {loading ? t('inventorySessions.creating') : t('inventorySessions.create')}
           </AppButton>
         </form>
       ) : (
         <>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            {t('inventorySessions.addProducts')}
+            {t('inventorySessions.sessionCreated', { id: createdSessionId })}
           </Typography>
-          <ProductAutocomplete
-            options={productOptions}
-            valueIds={selectedProductIds}
-            onChange={setSelectedProductIds}
-            label={t('products.product')}
-            placeholder={t('inventorySessions.productsPlaceholder')}
-          />
-          <AppButton
-            sx={{ mt: 2 }}
-            disabled={loading || !selectedProductIds.length}
-            onClick={() => handleAddProducts(selectedProductIds)}
-          >
-            {loading ? t('common.loading') : t('inventorySessions.productsAdded')}
-          </AppButton>
-          <AppButton sx={{ mt: 2, ml: 1 }} variant="outlined" onClick={resetCreatedSession}>
-            {t('users.cancel')}
+          <AppButton variant="outlined" onClick={resetCreatedSession}>
+            {t('inventorySessions.createAnother')}
           </AppButton>
         </>
       )}

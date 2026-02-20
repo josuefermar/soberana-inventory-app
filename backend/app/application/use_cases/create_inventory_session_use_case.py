@@ -1,13 +1,15 @@
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
+from app.application.services.feature_flag_service import FeatureFlagService
 from app.domain.entities.inventory_session import InventorySession
 from app.domain.exceptions.business_exceptions import BusinessRuleViolation
 from app.domain.repositories.inventory_session_repository import InventorySessionRepository
 
-# Business rules: sessions only on days 1-3; count_number auto 1..3; max 3 per month per warehouse
+# Business rules: sessions only on days 1-3 when feature flag enabled; count_number auto 1..3; max 3 per month per warehouse
 ALLOWED_SESSION_CREATION_DAYS = (1, 2, 3)
 MAX_SESSIONS_PER_MONTH = 3
+FEATURE_FLAG_INVENTORY_DATE_RESTRICTION = "ENABLE_INVENTORY_DATE_RESTRICTION"
 
 
 def _normalize_month_to_first_utc(month: datetime) -> datetime:
@@ -21,8 +23,13 @@ def _normalize_month_to_first_utc(month: datetime) -> datetime:
 
 class CreateInventorySessionUseCase:
 
-    def __init__(self, repository: InventorySessionRepository):
+    def __init__(
+        self,
+        repository: InventorySessionRepository,
+        feature_flag_service: FeatureFlagService,
+    ):
         self.repository = repository
+        self.feature_flag_service = feature_flag_service
 
     def execute(
         self,
@@ -31,10 +38,11 @@ class CreateInventorySessionUseCase:
         created_by: UUID,
     ) -> InventorySession:
         now_utc = datetime.now(timezone.utc)
-        if now_utc.day not in ALLOWED_SESSION_CREATION_DAYS:
-            raise BusinessRuleViolation(
-                "Inventory sessions can only be created during the first 3 days of the month."
-            )
+        if self.feature_flag_service.is_enabled(FEATURE_FLAG_INVENTORY_DATE_RESTRICTION):
+            if now_utc.day not in ALLOWED_SESSION_CREATION_DAYS:
+                raise BusinessRuleViolation(
+                    "Inventory sessions can only be created during the first 3 days of the month."
+                )
 
         month = _normalize_month_to_first_utc(month)
 

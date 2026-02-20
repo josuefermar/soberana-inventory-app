@@ -1,6 +1,22 @@
 import { apiClient } from '../../../services/apiClient';
 
 /**
+ * @returns {Promise<Array<import('./types').ProductListItem>>}
+ */
+export async function getProducts() {
+  const { data } = await apiClient.get('/products/');
+  return Array.isArray(data) ? data : [];
+}
+
+/**
+ * @returns {Promise<Array<import('./types').MeasureUnitItem>>}
+ */
+export async function getMeasures() {
+  const { data } = await apiClient.get('/measurement-units/');
+  return Array.isArray(data) ? data : [];
+}
+
+/**
  * @param {{ warehouse_id?: string; month?: string; status?: string }} params
  * @returns {Promise<Array<import('./types').SessionListItem>>}
  */

@@ -9,3 +9,15 @@
 /**
  * @typedef {{ product?: { id?: string; description?: string; code?: string }; packaging_quantity: number; total_units: number; created_at?: string }} CountRow
  */
+
+/**
+ * @typedef {{ id: string; code: string; description: string; inventory_unit_id?: string; packaging_unit_id?: string; conversion_factor?: number }} ProductListItem
+ */
+
+/**
+ * @typedef {{ id: string; name: string; description?: string }} MeasureUnitItem
+ */
+
+/**
+ * @typedef {{ product_id: string; measure_unit_id: string; quantity: number }} ProductCountItem
+ */

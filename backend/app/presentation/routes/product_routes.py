@@ -22,6 +22,13 @@ def list_products(
     use_case = ListProductsUseCase(repository)
     products = use_case.execute()
     return [
-        ProductResponse(id=p.id, code=p.code, description=p.description)
+        ProductResponse(
+            id=p.id,
+            code=p.code,
+            description=p.description,
+            inventory_unit_id=p.inventory_unit,
+            packaging_unit_id=p.packaging_unit,
+            conversion_factor=p.conversion_factor,
+        )
         for p in products
     ]

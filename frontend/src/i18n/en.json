@@ -51,8 +51,13 @@
     "clearFilters": "Clear",
     "noSessions": "No sessions found",
     "addProducts": "Add products to session",
+    "addProduct": "Add Product",
+    "measureUnit": "Measure Unit",
+    "quantity": "Quantity",
     "productsPlaceholder": "Search and select products",
-    "productsAdded": "Products added"
+    "productsAdded": "Products added",
+    "addAtLeastOneProduct": "Add at least one product with quantity.",
+    "createAnother": "Create another session"
   },
   "products": {
     "title": "Products",

@@ -12,6 +12,7 @@ from starlette.types import ExceptionHandler
 
 from app.domain.exceptions.business_exceptions import BusinessRuleViolation, NotFoundException
 from app.infrastructure.logging.logger import logger
+from app.infrastructure.seeders.feature_flag_seeder import seed_feature_flags_if_missing
 from app.infrastructure.seeders.master_data_seeder import seed_master_data_if_empty
 from app.infrastructure.seeders.user_seeder import (
     ensure_default_admin_exists,
@@ -23,9 +24,11 @@ from app.presentation.exception_handlers import (
 )
 from app.presentation.middleware.logging_middleware import LoggingMiddleware
 from app.presentation.routes.auth_routes import router as auth_router
+from app.presentation.routes.feature_flag_routes import router as feature_flag_router
 from app.presentation.routes.inventory_session_routes import router as inventory_session_router
 from app.presentation.routes.user_managment_routes import router as user_managment_router
 from app.presentation.routes.warehouse_routes import router as warehouse_router
+from app.presentation.routes.measurement_unit_routes import router as measurement_unit_router
 from app.presentation.routes.product_routes import router as product_router
 
 
@@ -52,6 +55,11 @@ async def lifespan(app: FastAPI):
     logger.info(
         "Startup: default admin ensured",
         extra={"event": "default_admin_ensured"},
+    )
+    await seed_feature_flags_if_missing()
+    logger.info(
+        "Startup: feature flags seed completed",
+        extra={"event": "feature_flags_seed_completed"},
     )
     yield
 
@@ -87,7 +95,9 @@ app.add_exception_handler(
 app.add_middleware(LoggingMiddleware)  # type: ignore[arg-type]
 
 app.include_router(auth_router)
+app.include_router(feature_flag_router)
 app.include_router(inventory_session_router)
 app.include_router(user_managment_router)
 app.include_router(warehouse_router)
+app.include_router(measurement_unit_router)
 app.include_router(product_router)
