@@ -38,6 +38,26 @@ class InventoryCountRepositoryImpl(InventoryCountRepository):
         )
         return [self._to_domain(m) for m in models]
 
+    def exists_by_session_and_product(self, session_id: UUID, product_id: UUID) -> bool:
+        return (
+            self.db.query(InventoryCountModel)
+            .filter(
+                InventoryCountModel.session_id == session_id,
+                InventoryCountModel.product_id == product_id,
+            )
+            .first()
+            is not None
+        )
+
+    def count_by_session(self, session_id: UUID) -> int:
+        from sqlalchemy import func
+        return (
+            self.db.query(func.count(InventoryCountModel.id))
+            .filter(InventoryCountModel.session_id == session_id)
+            .scalar()
+            or 0
+        )
+
     def _to_domain(self, model: InventoryCountModel) -> InventoryCount:
         return InventoryCount(
             id=cast(UUID, model.id),

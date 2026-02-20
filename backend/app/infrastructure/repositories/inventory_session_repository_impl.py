@@ -1,5 +1,5 @@
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List, cast
 from sqlalchemy.orm import Session
 
@@ -46,8 +46,34 @@ class InventorySessionRepositoryImpl(InventorySessionRepository):
             .filter(InventorySessionModel.warehouse_id == warehouse_id)
             .all()
         )
-
         return [self._to_domain(db_session) for db_session in db_sessions]
+
+    def list_filtered(
+        self,
+        warehouse_id: Optional[UUID] = None,
+        month: Optional[datetime] = None,
+        status: Optional[str] = None,
+    ) -> List[InventorySession]:
+        q = self.db.query(InventorySessionModel)
+        if warehouse_id is not None:
+            q = q.filter(InventorySessionModel.warehouse_id == warehouse_id)
+        if month is not None:
+            from calendar import monthrange
+            from datetime import timedelta
+            month_utc = month if month.tzinfo else month.replace(tzinfo=timezone.utc)
+            start = month_utc.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            ndays = monthrange(start.year, start.month)[1]
+            end = start + timedelta(days=ndays)
+            q = q.filter(
+                InventorySessionModel.month >= start,
+                InventorySessionModel.month < end,
+            )
+        if status == "open":
+            q = q.filter(InventorySessionModel.closed_at.is_(None))
+        elif status == "closed":
+            q = q.filter(InventorySessionModel.closed_at.isnot(None))
+        q = q.order_by(InventorySessionModel.created_at.desc())
+        return [self._to_domain(m) for m in q.all()]
 
     def _to_domain(self, model: InventorySessionModel) -> InventorySession:
         return InventorySession(

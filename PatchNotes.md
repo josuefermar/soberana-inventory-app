@@ -4,7 +4,24 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.4 (WIP)
+## v0.0.5 (WIP)
+
+- [feature] Backend: inventory session creation — count_number auto-assigned (1..3), month normalized to first-day UTC; CreateInventorySessionUseCase no longer accepts count_number
+- [feature] Backend: AddProductsToSessionUseCase — add products to session via 0-quantity counts; inventory_counts as single source of truth (UniqueConstraint session_id+product_id)
+- [feature] Backend: ListInventorySessionsUseCase — list sessions with filters (warehouse_id, month, status open/closed), summary includes warehouse_description and products_count
+- [feature] Backend: ListSessionProductsFromCountsUseCase — list session products derived from inventory_counts; ListProductsUseCase (list_active); ListWarehousesUseCase (list_all)
+- [feature] Backend: RegisterInventoryCountUseCase — block counts on closed session; block duplicate product count in same session (business rule + exists_by_session_and_product)
+- [feature] Backend: repositories — InventoryCountRepository exists_by_session_and_product, count_by_session; InventorySessionRepository list_filtered; ProductRepository list_active; WarehouseRepository get_by_id, list_all
+- [feature] Backend: GET /inventory-sessions/ (ADMIN, filter by warehouse_id, month, status), POST /inventory-sessions/{id}/products, GET /inventory-sessions/{id}/products; GET /products/, GET /warehouses/ (ADMIN, WAREHOUSE_MANAGER)
+- [config] Backend: migrations — add inventory_session_products table, add unique session+product on inventory_counts, migration to remove session_products and use counts
+- [feature] Frontend: i18n — react-i18next with en/es; LanguageSelector component; Dashboard, Login, and inventory copy use translations
+- [feature] Frontend: Admin Sessions — useAdminSessions, AdminSessionsPage (list sessions with warehouse/month/status filters); route and Navbar link
+- [feature] Frontend: Create Session — useCreateSession/CreateSessionPage no count_number; session products via add/list session products API; ProductAutocomplete, WarehouseAutocomplete; products and warehouses services (GET /products, GET /warehouses)
+- [feature] Frontend: FRONTEND_STRUCTURE_AND_FLOW.md — doc for app structure, router, guards, features, and conventions
+- [config] Frontend: Dockerfile.dev tweak; package.json + react-i18next (or i18n deps)
+- [feature] Backend: unit tests for AddProductsToSessionUseCase and CreateInventorySessionUseCase; test_warehouses_endpoint; UNIT_TEST_SUGGESTIONS_INVENTORY.md
+
+## v0.0.4
 
 - [feature] Backend: CORS middleware — allow frontend origins via CORS_ORIGINS (default localhost:5173), credentials, all methods/headers
 - [config] docker-compose.dev.yml: Postgres host port 5433 (was 5432) to avoid conflict with local Postgres

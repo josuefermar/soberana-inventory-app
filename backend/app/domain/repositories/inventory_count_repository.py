@@ -12,3 +12,13 @@ class InventoryCountRepository(ABC):
     @abstractmethod
     def list_by_session(self, session_id: UUID) -> list[InventoryCount]:
         pass
+
+    @abstractmethod
+    def exists_by_session_and_product(self, session_id: UUID, product_id: UUID) -> bool:
+        """Returns True if a count for this product already exists in the session."""
+        pass
+
+    @abstractmethod
+    def count_by_session(self, session_id: UUID) -> int:
+        """Return number of count records for the session."""
+        pass

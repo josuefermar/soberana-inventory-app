@@ -1,6 +1,7 @@
+from datetime import datetime, timezone
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
 from app.application.use_cases.create_inventory_session_use_case import (
@@ -9,6 +10,15 @@ from app.application.use_cases.create_inventory_session_use_case import (
 from app.application.use_cases.inventory import (
     ListInventoryCountsUseCase,
     RegisterInventoryCountUseCase,
+)
+from app.application.use_cases.add_products_to_session_use_case import (
+    AddProductsToSessionUseCase,
+)
+from app.application.use_cases.list_inventory_sessions_use_case import (
+    ListInventorySessionsUseCase,
+)
+from app.application.use_cases.list_session_products_from_counts_use_case import (
+    ListSessionProductsFromCountsUseCase,
 )
 from app.domain.entities.user_role import UserRole
 from app.infrastructure.logging.logger import logger
@@ -21,6 +31,9 @@ from app.infrastructure.repositories.inventory_session_repository_impl import (
 from app.infrastructure.repositories.product_repository_impl import (
     ProductRepositoryImpl,
 )
+from app.infrastructure.repositories.warehouse_repository_impl import (
+    WarehouseRepositoryImpl,
+)
 from app.presentation.dependencies.database import get_db
 from app.presentation.dependencies.role_dependencies import require_roles
 from app.presentation.schemas.inventory_count_schema import (
@@ -29,11 +42,56 @@ from app.presentation.schemas.inventory_count_schema import (
     ProductSummary,
 )
 from app.presentation.schemas.inventory_session_schema import (
+    AddSessionProductsRequest,
     CreateInventorySessionRequest,
+    InventorySessionListResponse,
     InventorySessionResponse,
 )
 
 router = APIRouter(prefix="/inventory-sessions", tags=["Inventory Sessions"])
+
+
+@router.get("/", response_model=list[InventorySessionListResponse])
+def list_inventory_sessions(
+    warehouse_id: UUID | None = Query(None),
+    month: str | None = Query(None, description="YYYY-MM"),
+    status: str | None = Query(None, description="open | closed"),
+    db: Session = Depends(get_db),
+    _current_user=Depends(require_roles([UserRole.ADMIN])),
+):
+    month_dt = None
+    if month:
+        try:
+            parts = month.strip().split("-")
+            if len(parts) == 2:
+                y, m = int(parts[0]), int(parts[1])
+                month_dt = datetime(y, m, 1, tzinfo=timezone.utc)
+        except (ValueError, IndexError):
+            pass
+    session_repo = InventorySessionRepositoryImpl(db)
+    warehouse_repo = WarehouseRepositoryImpl(db)
+    count_repo = InventoryCountRepositoryImpl(db)
+    use_case = ListInventorySessionsUseCase(
+        session_repo, warehouse_repo, count_repo
+    )
+    summaries = use_case.execute(
+        warehouse_id=warehouse_id,
+        month=month_dt,
+        status=status,
+    )
+    return [
+        InventorySessionListResponse(
+            id=s.id,
+            warehouse_id=s.warehouse_id,
+            warehouse_description=s.warehouse_description,
+            month=s.month,
+            count_number=s.count_number,
+            created_at=s.created_at,
+            closed_at=s.closed_at,
+            products_count=s.products_count,
+        )
+        for s in summaries
+    ]
 
 
 @router.post("/", response_model=InventorySessionResponse)
@@ -48,11 +106,52 @@ def create_inventory_session(
     result = use_case.execute(
         warehouse_id=request.warehouse_id,
         month=request.month,
-        count_number=request.count_number,
         created_by=request.created_by,
     )
 
-    return result
+    return InventorySessionResponse(
+        id=result.id,
+        warehouse_id=result.warehouse_id,
+        month=result.month,
+        count_number=result.count_number,
+        created_by=result.created_by,
+        created_at=result.created_at,
+        closed_at=result.closed_at,
+    )
+
+
+@router.post("/{session_id}/products")
+def add_session_products(
+    session_id: UUID,
+    request: AddSessionProductsRequest,
+    db: Session = Depends(get_db),
+    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
+):
+    session_repo = InventorySessionRepositoryImpl(db)
+    count_repo = InventoryCountRepositoryImpl(db)
+    product_repo = ProductRepositoryImpl(db)
+    use_case = AddProductsToSessionUseCase(session_repo, count_repo, product_repo)
+    added = use_case.execute(session_id, request.product_ids)
+    return {"added": len(added)}
+
+
+@router.get("/{session_id}/products", response_model=list)
+def list_session_products(
+    session_id: UUID,
+    db: Session = Depends(get_db),
+    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
+):
+    session_repo = InventorySessionRepositoryImpl(db)
+    count_repo = InventoryCountRepositoryImpl(db)
+    product_repo = ProductRepositoryImpl(db)
+    use_case = ListSessionProductsFromCountsUseCase(
+        session_repo, count_repo, product_repo
+    )
+    items = use_case.execute(session_id)
+    return [
+        {"product_id": i.product_id, "code": i.code, "description": i.description}
+        for i in items
+    ]
 
 
 @router.post("/{session_id}/counts", response_model=InventoryCountResponse)

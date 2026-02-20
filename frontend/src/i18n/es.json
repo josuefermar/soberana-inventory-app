@@ -1,0 +1,97 @@
+{
+  "login": {
+    "title": "Iniciar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "loggingIn": "Entrando..."
+  },
+  "users": {
+    "title": "Usuarios",
+    "refresh": "Actualizar",
+    "syncUsers": "Sincronizar usuarios",
+    "syncing": "Sincronizando...",
+    "createUser": "Crear usuario",
+    "cancel": "Cancelar",
+    "create": "Crear",
+    "identification": "Identificación",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "role": "Rol",
+    "password": "Contraseña",
+    "warehouses": "Almacenes",
+    "warehousesPlaceholder": "Seleccionar almacenes",
+    "active": "Activo",
+    "yes": "Sí",
+    "no": "No",
+    "userCreated": "Usuario creado",
+    "synced": "Sincronizado. Usuarios creados: {{count}}"
+  },
+  "inventorySessions": {
+    "title": "Crear sesión de inventario",
+    "warehouse": "Almacén",
+    "warehousePlaceholder": "Seleccionar almacén",
+    "month": "Mes",
+    "countNumber": "Número de conteo (1-3)",
+    "creating": "Creando...",
+    "create": "Crear",
+    "sessionCreated": "Sesión creada: {{id}}",
+    "adminSessionsTitle": "Sesiones de inventario",
+    "warehouseColumn": "Almacén",
+    "monthColumn": "Mes",
+    "countColumn": "Conteo",
+    "createdAt": "Creado",
+    "closedAt": "Cerrado",
+    "productsCount": "Productos",
+    "status": "Estado",
+    "open": "Abierta",
+    "closed": "Cerrada",
+    "filters": "Filtros",
+    "applyFilters": "Aplicar",
+    "clearFilters": "Limpiar",
+    "noSessions": "No hay sesiones",
+    "addProducts": "Añadir productos a la sesión",
+    "productsPlaceholder": "Buscar y seleccionar productos",
+    "productsAdded": "Productos añadidos"
+  },
+  "products": {
+    "title": "Productos",
+    "product": "Producto",
+    "productPlaceholder": "Buscar producto",
+    "packagingQuantity": "Cantidad por empaque",
+    "totalUnits": "Unidades totales",
+    "submit": "Enviar",
+    "submitting": "Enviando..."
+  },
+  "warehouses": {
+    "title": "Almacenes",
+    "code": "Código",
+    "description": "Descripción",
+    "status": "Estado"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido",
+    "role": "Rol",
+    "manageUsers": "Gestionar usuarios",
+    "createSession": "Crear sesión de inventario",
+    "syncUsers": "Sincronizar usuarios",
+    "registerCount": "Registrar conteo",
+    "viewCounts": "Ver conteos",
+    "inventorySessions": "Sesiones de inventario",
+    "enterSessionId": "Ingrese ID de sesión (UUID):"
+  },
+  "forms": {
+    "required": "Requerido",
+    "optional": "Opcional"
+  },
+  "errors": {
+    "requestFailed": "Error en la solicitud",
+    "accessDenied": "No tiene permiso para acceder a este recurso",
+    "sessionNotFound": "Sesión no encontrada",
+    "loadFailed": "Error al cargar los datos"
+  },
+  "common": {
+    "logout": "Cerrar sesión",
+    "loading": "Cargando..."
+  }
+}

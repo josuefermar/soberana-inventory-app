@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
 import {
   AppButton,
@@ -9,18 +10,23 @@ import {
 } from '../../../components/ui';
 import { AppSelect } from '../../../components/ui/Select';
 import { ROLE_OPTIONS } from '../../../constants';
+import { WarehouseAutocomplete } from '../../warehouses/components';
 import { useUsers } from '../hooks';
 
-const USER_COLUMNS = [
-  { id: 'email', label: 'Email' },
-  { id: 'name', label: 'Name' },
-  { id: 'identification', label: 'Identification' },
-  { id: 'role', label: 'Role' },
-  { id: 'warehouses', label: 'Warehouses' },
-  { id: 'is_active', label: 'Active' },
-];
+function useUserColumns() {
+  const { t } = useTranslation();
+  return [
+    { id: 'email', label: t('users.email') },
+    { id: 'name', label: t('users.name') },
+    { id: 'identification', label: t('users.identification') },
+    { id: 'role', label: t('users.role') },
+    { id: 'warehouses', label: t('users.warehouses') },
+    { id: 'is_active', label: t('users.active') },
+  ];
+}
 
 export function UsersPage() {
+  const { t } = useTranslation();
   const {
     users,
     loading,
@@ -35,6 +41,7 @@ export function UsersPage() {
     snack,
     closeSnack,
   } = useUsers();
+  const USER_COLUMNS = useUserColumns();
 
   const tableRows = users.map((u) => ({
     id: u.id,
@@ -43,17 +50,17 @@ export function UsersPage() {
     identification: u.identification ?? '',
     role: u.role,
     warehouses: Array.isArray(u.warehouses) ? u.warehouses.join(', ') : '',
-    is_active: u.is_active ? 'Yes' : 'No',
+    is_active: u.is_active ? t('users.yes') : t('users.no'),
   }));
 
   return (
     <PageContainer maxWidth="lg">
       <Typography variant="h5" gutterBottom>
-        Users
+        {t('users.title')}
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
         <AppButton onClick={loadUsers} disabled={loading}>
-          Refresh
+          {t('users.refresh')}
         </AppButton>
         <AppButton
           variant="outlined"
@@ -61,30 +68,30 @@ export function UsersPage() {
           onClick={handleSync}
           disabled={syncLoading}
         >
-          {syncLoading ? 'Syncing...' : 'Sync Users'}
+          {syncLoading ? t('users.syncing') : t('users.syncUsers')}
         </AppButton>
-        <AppButton onClick={() => setCreateOpen(true)}>Create User</AppButton>
+        <AppButton onClick={() => setCreateOpen(true)}>{t('users.createUser')}</AppButton>
       </Box>
       <AppTable columns={USER_COLUMNS} rows={tableRows} />
 
       <AppDialog
         open={createOpen}
         onClose={() => setCreateOpen(false)}
-        title="Create User"
+        title={t('users.createUser')}
         actions={
           <>
             <AppButton onClick={() => setCreateOpen(false)} color="inherit">
-              Cancel
+              {t('users.cancel')}
             </AppButton>
             <AppButton type="submit" form="create-user-form">
-              Create
+              {t('users.create')}
             </AppButton>
           </>
         }
       >
         <form id="create-user-form" onSubmit={handleCreate}>
           <AppTextField
-            label="Identification"
+            label={t('users.identification')}
             value={form.identification}
             onChange={(e) =>
               setForm((f) => ({ ...f, identification: e.target.value }))
@@ -93,14 +100,14 @@ export function UsersPage() {
             required
           />
           <AppTextField
-            label="Name"
+            label={t('users.name')}
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
             margin="dense"
             required
           />
           <AppTextField
-            label="Email"
+            label={t('users.email')}
             type="email"
             value={form.email}
             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
@@ -108,14 +115,14 @@ export function UsersPage() {
             required
           />
           <AppSelect
-            label="Role"
+            label={t('users.role')}
             value={form.role}
             onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}
             margin="dense"
             options={ROLE_OPTIONS.map((r) => ({ value: r, label: r }))}
           />
           <AppTextField
-            label="Password"
+            label={t('users.password')}
             type="password"
             value={form.password}
             onChange={(e) =>
@@ -124,13 +131,14 @@ export function UsersPage() {
             margin="dense"
             required
           />
-          <AppTextField
-            label="Warehouses (comma-separated UUIDs)"
-            value={form.warehouses}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, warehouses: e.target.value }))
-            }
+          <WarehouseAutocomplete
+            label={t('users.warehouses')}
+            placeholder={t('users.warehousesPlaceholder')}
+            options={form.warehouseOptions ?? []}
+            valueIds={form.warehouses}
+            onChange={(ids) => setForm((f) => ({ ...f, warehouses: ids }))}
             margin="dense"
+            multiple
           />
         </form>
       </AppDialog>

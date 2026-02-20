@@ -1,4 +1,5 @@
-from typing import Optional, cast
+from datetime import datetime
+from typing import List, Optional, cast
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -17,6 +18,15 @@ class ProductRepositoryImpl(ProductRepository):
         if not model:
             return None
         return self._to_domain(model)
+
+    def list_active(self) -> List[Product]:
+        models = (
+            self.db.query(ProductModel)
+            .filter(ProductModel.is_active == True)
+            .order_by(ProductModel.code)
+            .all()
+        )
+        return [self._to_domain(m) for m in models]
 
     def count(self) -> int:
         return self.db.query(ProductModel).count()
@@ -39,8 +49,6 @@ class ProductRepositoryImpl(ProductRepository):
         return self._to_domain(model)
 
     def _to_domain(self, model: ProductModel) -> Product:
-        from datetime import datetime
-
         return Product(
             id=cast(UUID, model.id),
             code=cast(str, model.code),

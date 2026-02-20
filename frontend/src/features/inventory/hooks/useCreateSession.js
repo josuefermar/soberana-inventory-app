@@ -1,34 +1,40 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 import { getErrorMessage } from '../../../utils/errorHandling';
-import { createSession as createSessionApi } from '../services/inventoryService';
+import { getWarehouses } from '../../warehouses/services';
+import {
+  createSession as createSessionApi,
+  addSessionProducts as addSessionProductsApi,
+} from '../services/inventoryService';
 
 /**
- * Create session form and submit. Uses current user for created_by.
- * @returns {{
- *   warehouse_id: string;
- *   setWarehouse_id: (v: string) => void;
- *   month: string;
- *   setMonth: (v: string) => void;
- *   count_number: number;
- *   setCount_number: (v: number) => void;
- *   loading: boolean;
- *   handleSubmit: (e: React.FormEvent) => Promise<void>;
- *   snack: { open: boolean; message: string; severity: string };
- *   closeSnack: () => void;
- * }}
+ * Create session form and submit. count_number is computed by backend.
+ * After create, optional step to add products to session.
  */
 export function useCreateSession() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [warehouse_id, setWarehouse_id] = useState('');
   const [month, setMonth] = useState('');
-  const [count_number, setCount_number] = useState(1);
+  const [warehouseOptions, setWarehouseOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [createdSessionId, setCreatedSessionId] = useState(null);
   const [snack, setSnack] = useState({
     open: false,
     message: '',
     severity: 'success',
   });
+
+  useEffect(() => {
+    getWarehouses()
+      .then((list) =>
+        setWarehouseOptions(
+          list.map((w) => ({ id: w.id, label: w.description || w.code }))
+        )
+      )
+      .catch(() => setWarehouseOptions([]));
+  }, []);
 
   const closeSnack = useCallback(() => {
     setSnack((s) => ({ ...s, open: false }));
@@ -46,17 +52,16 @@ export function useCreateSession() {
         const data = await createSessionApi({
           warehouse_id,
           month: monthDate,
-          count_number: Number(count_number),
           created_by: user.sub,
         });
         setSnack({
           open: true,
-          message: `Session created: ${data.id}`,
+          message: t('inventorySessions.sessionCreated', { id: data.id }),
           severity: 'success',
         });
+        setCreatedSessionId(data.id);
         setWarehouse_id('');
         setMonth('');
-        setCount_number(1);
       } catch (err) {
         setSnack({
           open: true,
@@ -67,18 +72,50 @@ export function useCreateSession() {
         setLoading(false);
       }
     },
-    [warehouse_id, month, count_number, user?.sub]
+    [warehouse_id, month, user?.sub, t]
   );
+
+  const handleAddProducts = useCallback(
+    async (productIds) => {
+      if (!createdSessionId || !productIds?.length) return;
+      setLoading(true);
+      try {
+        const { added } = await addSessionProductsApi(createdSessionId, {
+          product_ids: productIds,
+        });
+        setSnack({
+          open: true,
+          message: t('inventorySessions.productsAdded') + ` (${added})`,
+          severity: 'success',
+        });
+      } catch (err) {
+        setSnack({
+          open: true,
+          message: getErrorMessage(err),
+          severity: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [createdSessionId, t]
+  );
+
+  const resetCreatedSession = useCallback(() => {
+    setCreatedSessionId(null);
+  }, []);
 
   return {
     warehouse_id,
     setWarehouse_id,
     month,
     setMonth,
-    count_number,
-    setCount_number,
     loading,
+    warehouseOptions,
     handleSubmit,
+    createdSessionId,
+    handleAddProducts,
+    resetCreatedSession,
     snack,
     closeSnack,
   };

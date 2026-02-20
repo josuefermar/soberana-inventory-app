@@ -1,20 +1,26 @@
 import { Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
 import { AppLoader, AppSnackbar, AppTable } from '../../../components/ui';
 import { useViewCounts } from '../hooks';
 import { formatDateTime } from '../../../utils';
 
-const COUNT_COLUMNS = [
-  { id: 'product', label: 'Product' },
-  { id: 'packaging_quantity', label: 'Packaging quantity' },
-  { id: 'total_units', label: 'Total units' },
-  { id: 'created_at', label: 'Created at' },
-];
+function useCountColumns() {
+  const { t } = useTranslation();
+  return [
+    { id: 'product', label: t('products.product') },
+    { id: 'packaging_quantity', label: t('products.packagingQuantity') },
+    { id: 'total_units', label: t('products.totalUnits') },
+    { id: 'created_at', label: t('inventorySessions.createdAt') },
+  ];
+}
 
 export function ViewCountsPage() {
   const { sessionId } = useParams();
+  const { t } = useTranslation();
   const { counts, loading, snack, closeSnack } = useViewCounts(sessionId);
+  const COUNT_COLUMNS = useCountColumns();
 
   const tableRows = counts.map((row, idx) => ({
     id: row.product?.id ?? idx,
@@ -31,13 +37,13 @@ export function ViewCountsPage() {
   return (
     <PageContainer maxWidth="lg">
       <Typography variant="h5" gutterBottom>
-        View Counts
+        {t('dashboard.viewCounts')}
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
         Session: {sessionId}
       </Typography>
       {loading ? (
-        <AppLoader message="Loading..." />
+        <AppLoader message={t('common.loading')} />
       ) : (
         <AppTable columns={COUNT_COLUMNS} rows={tableRows} rowKey="id" />
       )}

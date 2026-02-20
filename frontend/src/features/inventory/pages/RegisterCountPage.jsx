@@ -1,11 +1,13 @@
 import { Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
 import { AppButton, AppSnackbar, AppTextField } from '../../../components/ui';
 import { useRegisterCount } from '../hooks';
 
 export function RegisterCountPage() {
   const { sessionId } = useParams();
+  const { t } = useTranslation();
   const {
     product_id,
     setProduct_id,
@@ -21,20 +23,20 @@ export function RegisterCountPage() {
   return (
     <PageContainer maxWidth="sm">
       <Typography variant="h5" gutterBottom>
-        Register Count
+        {t('products.title')}
       </Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
         Session: {sessionId}
       </Typography>
       <form onSubmit={handleSubmit}>
         <AppTextField
-          label="Product ID (UUID)"
+          label={t('products.product')}
           value={product_id}
           onChange={(e) => setProduct_id(e.target.value)}
           required
         />
         <AppTextField
-          label="Packaging quantity"
+          label={t('products.packagingQuantity')}
           type="number"
           inputProps={{ min: 1 }}
           value={packaging_quantity}
@@ -43,11 +45,11 @@ export function RegisterCountPage() {
         />
         {lastTotal != null && (
           <Typography sx={{ mt: 1 }}>
-            Total units: <strong>{lastTotal}</strong>
+            {t('products.totalUnits')}: <strong>{lastTotal}</strong>
           </Typography>
         )}
         <AppButton type="submit" sx={{ mt: 2 }} disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit'}
+          {loading ? t('products.submitting') : t('products.submit')}
         </AppButton>
       </form>
       <AppSnackbar

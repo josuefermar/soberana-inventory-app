@@ -1,0 +1,1 @@
+export { WarehouseAutocomplete } from './WarehouseAutocomplete';

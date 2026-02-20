@@ -1,5 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 import { PageContainer } from '../../../components/layout';
 import { AppButton } from '../../../components/ui';
@@ -8,57 +9,61 @@ import { ROLES } from '../../../constants';
 export function DashboardPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const role = user?.role ?? '';
 
   return (
     <PageContainer maxWidth="md">
       <Typography variant="h5" gutterBottom>
-        Welcome
+        {t('dashboard.welcome')}
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Role: {role}
+        {t('dashboard.role')}: {role}
       </Typography>
       <Stack spacing={2}>
         {role === ROLES.ADMIN && (
           <>
             <AppButton onClick={() => navigate('/users')}>
-              Manage Users
+              {t('dashboard.manageUsers')}
             </AppButton>
             <AppButton onClick={() => navigate('/create-session')}>
-              Create Inventory Session
+              {t('dashboard.createSession')}
+            </AppButton>
+            <AppButton onClick={() => navigate('/admin-sessions')}>
+              {t('dashboard.inventorySessions')}
             </AppButton>
             <AppButton
               variant="outlined"
               color="secondary"
               onClick={() => navigate('/users')}
             >
-              Sync Users
+              {t('dashboard.syncUsers')}
             </AppButton>
           </>
         )}
         {role === ROLES.WAREHOUSE_MANAGER && (
           <>
             <AppButton onClick={() => navigate('/create-session')}>
-              Create Inventory Session
+              {t('dashboard.createSession')}
             </AppButton>
             <AppButton
               onClick={() => {
-                const sessionId = prompt('Enter session ID (UUID):');
+                const sessionId = prompt(t('dashboard.enterSessionId'));
                 if (sessionId) navigate(`/register-count/${sessionId}`);
               }}
             >
-              Register Count
+              {t('dashboard.registerCount')}
             </AppButton>
           </>
         )}
         {role === ROLES.PROCESS_LEADER && (
           <AppButton
             onClick={() => {
-              const sessionId = prompt('Enter session ID (UUID):');
+              const sessionId = prompt(t('dashboard.enterSessionId'));
               if (sessionId) navigate(`/view-counts/${sessionId}`);
             }}
           >
-            View Counts
+            {t('dashboard.viewCounts')}
           </AppButton>
         )}
       </Stack>

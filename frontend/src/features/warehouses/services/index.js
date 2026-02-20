@@ -1,0 +1,1 @@
+export { getWarehouses } from './warehousesService';

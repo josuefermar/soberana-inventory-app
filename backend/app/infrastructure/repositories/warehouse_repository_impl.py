@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, cast
+from typing import List, Optional, cast
 from uuid import UUID
 
 from sqlalchemy.orm import Session
@@ -17,12 +17,26 @@ class WarehouseRepositoryImpl(WarehouseRepository):
     def count(self) -> int:
         return self.db.query(WarehouseModel).count()
 
+    def get_by_id(self, warehouse_id: UUID) -> Optional[Warehouse]:
+        model = (
+            self.db.query(WarehouseModel)
+            .filter(WarehouseModel.id == warehouse_id)
+            .first()
+        )
+        if not model:
+            return None
+        return self._to_domain(model)
+
     def list_active(self) -> List[Warehouse]:
         models = (
             self.db.query(WarehouseModel)
             .filter(WarehouseModel.is_active == True)
             .all()
         )
+        return [self._to_domain(m) for m in models]
+
+    def list_all(self) -> List[Warehouse]:
+        models = self.db.query(WarehouseModel).order_by(WarehouseModel.code).all()
         return [self._to_domain(m) for m in models]
 
     def save(self, warehouse: Warehouse) -> Warehouse:

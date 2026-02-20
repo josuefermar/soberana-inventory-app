@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getErrorMessage } from '../../../utils/errorHandling';
+import { getWarehouses } from '../../warehouses/services';
 import { getUsers, syncUsers, createUser } from '../services/usersService';
 
 const INITIAL_FORM = {
@@ -8,7 +10,7 @@ const INITIAL_FORM = {
   email: '',
   role: 'WAREHOUSE_MANAGER',
   password: '',
-  warehouses: '',
+  warehouses: [],
 };
 
 /**
@@ -29,6 +31,7 @@ const INITIAL_FORM = {
  * }}
  */
 export function useUsers() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [syncLoading, setSyncLoading] = useState(false);
@@ -56,9 +59,25 @@ export function useUsers() {
     }
   }, []);
 
+  const [warehouseOptions, setWarehouseOptions] = useState([]);
+  const loadWarehouses = useCallback(async () => {
+    try {
+      const list = await getWarehouses();
+      setWarehouseOptions(
+        list.map((w) => ({ id: w.id, label: w.description || w.code }))
+      );
+    } catch (_) {
+      setWarehouseOptions([]);
+    }
+  }, []);
+
   useEffect(() => {
     loadUsers();
   }, [loadUsers]);
+
+  useEffect(() => {
+    loadWarehouses();
+  }, [loadWarehouses]);
 
   const handleSync = useCallback(async () => {
     setSyncLoading(true);
@@ -66,7 +85,7 @@ export function useUsers() {
       const data = await syncUsers();
       setSnack({
         open: true,
-        message: `Synced. Users created: ${data?.users_created ?? 0}`,
+        message: t('users.synced', { count: data?.users_created ?? 0 }),
         severity: 'success',
       });
       loadUsers();
@@ -79,22 +98,21 @@ export function useUsers() {
     } finally {
       setSyncLoading(false);
     }
-  }, [loadUsers]);
+  }, [loadUsers, t]);
 
   const handleCreate = useCallback(
     async (e) => {
       e.preventDefault();
       try {
         await createUser({
-          ...form,
-          warehouses: form.warehouses
-            ? form.warehouses
-                .split(',')
-                .map((s) => s.trim())
-                .filter(Boolean)
-            : [],
+          identification: form.identification,
+          name: form.name,
+          email: form.email,
+          role: form.role,
+          password: form.password,
+          warehouses: Array.isArray(form.warehouses) ? form.warehouses : [],
         });
-        setSnack({ open: true, message: 'User created', severity: 'success' });
+        setSnack({ open: true, message: t('users.userCreated'), severity: 'success' });
         setCreateOpen(false);
         setForm(INITIAL_FORM);
         loadUsers();
@@ -106,8 +124,10 @@ export function useUsers() {
         });
       }
     },
-    [form, loadUsers]
+    [form, loadUsers, t]
   );
+
+  const formWithOptions = { ...form, warehouseOptions };
 
   return {
     users,
@@ -115,7 +135,7 @@ export function useUsers() {
     syncLoading,
     createOpen,
     setCreateOpen,
-    form,
+    form: formWithOptions,
     setForm,
     loadUsers,
     handleSync,

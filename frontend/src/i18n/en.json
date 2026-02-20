@@ -1,0 +1,97 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "loggingIn": "Logging in..."
+  },
+  "users": {
+    "title": "Users",
+    "refresh": "Refresh",
+    "syncUsers": "Sync Users",
+    "syncing": "Syncing...",
+    "createUser": "Create User",
+    "cancel": "Cancel",
+    "create": "Create",
+    "identification": "Identification",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "password": "Password",
+    "warehouses": "Warehouses",
+    "warehousesPlaceholder": "Select warehouses",
+    "active": "Active",
+    "yes": "Yes",
+    "no": "No",
+    "userCreated": "User created",
+    "synced": "Synced. Users created: {{count}}"
+  },
+  "inventorySessions": {
+    "title": "Create Inventory Session",
+    "warehouse": "Warehouse",
+    "warehousePlaceholder": "Select warehouse",
+    "month": "Month",
+    "countNumber": "Count number (1-3)",
+    "creating": "Creating...",
+    "create": "Create",
+    "sessionCreated": "Session created: {{id}}",
+    "adminSessionsTitle": "Inventory Sessions",
+    "warehouseColumn": "Warehouse",
+    "monthColumn": "Month",
+    "countColumn": "Count",
+    "createdAt": "Created at",
+    "closedAt": "Closed at",
+    "productsCount": "Products",
+    "status": "Status",
+    "open": "Open",
+    "closed": "Closed",
+    "filters": "Filters",
+    "applyFilters": "Apply",
+    "clearFilters": "Clear",
+    "noSessions": "No sessions found",
+    "addProducts": "Add products to session",
+    "productsPlaceholder": "Search and select products",
+    "productsAdded": "Products added"
+  },
+  "products": {
+    "title": "Products",
+    "product": "Product",
+    "productPlaceholder": "Search product",
+    "packagingQuantity": "Packaging quantity",
+    "totalUnits": "Total units",
+    "submit": "Submit",
+    "submitting": "Submitting..."
+  },
+  "warehouses": {
+    "title": "Warehouses",
+    "code": "Code",
+    "description": "Description",
+    "status": "Status"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "role": "Role",
+    "manageUsers": "Manage Users",
+    "createSession": "Create Inventory Session",
+    "syncUsers": "Sync Users",
+    "registerCount": "Register Count",
+    "viewCounts": "View Counts",
+    "inventorySessions": "Inventory Sessions",
+    "enterSessionId": "Enter session ID (UUID):"
+  },
+  "forms": {
+    "required": "Required",
+    "optional": "Optional"
+  },
+  "errors": {
+    "requestFailed": "Request failed",
+    "accessDenied": "You don't have permission to access this resource",
+    "sessionNotFound": "Session not found",
+    "loadFailed": "Failed to load data"
+  },
+  "common": {
+    "logout": "Logout",
+    "loading": "Loading..."
+  }
+}

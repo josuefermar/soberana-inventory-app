@@ -37,6 +37,11 @@ class RegisterInventoryCountUseCase:
         if not session:
             raise NotFoundException("Inventory session not found")
 
+        if session.closed_at is not None:
+            raise BusinessRuleViolation(
+                "Cannot register counts on a closed inventory session."
+            )
+
         warehouse_id = session.warehouse_id
         if not is_admin and warehouse_id not in user_warehouse_ids:
             raise BusinessRuleViolation(
@@ -46,6 +51,11 @@ class RegisterInventoryCountUseCase:
         product = self.product_repository.get_by_id(product_id)
         if not product:
             raise NotFoundException("Product not found")
+
+        if self.count_repository.exists_by_session_and_product(session_id, product_id):
+            raise BusinessRuleViolation(
+                "This product has already been counted in this session."
+            )
 
         factor = int(product.conversion_factor)
         total_units = UnitConversionService.calculate_total_units(packaging_quantity, factor)

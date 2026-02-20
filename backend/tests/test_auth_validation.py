@@ -37,8 +37,7 @@ def test_inventory_sessions_create_without_token_returns_401():
         "/inventory-sessions/",
         json={
             "warehouse_id": "00000000-0000-0000-0000-000000000001",
-            "month": 1,
-            "count_number": 1,
+            "month": "2025-02-01T00:00:00.000Z",
             "created_by": "00000000-0000-0000-0000-000000000001",
         },
     )

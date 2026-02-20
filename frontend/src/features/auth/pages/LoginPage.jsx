@@ -1,9 +1,11 @@
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
 import { AppButton, AppTextField } from '../../../components/ui';
 import { useLogin } from '../hooks';
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const {
     email,
     setEmail,
@@ -17,11 +19,11 @@ export function LoginPage() {
   return (
     <PageContainer maxWidth="sm">
       <Typography variant="h5" gutterBottom>
-        Login
+        {t('login.title')}
       </Typography>
       <form onSubmit={handleSubmit}>
         <AppTextField
-          label="Email"
+          label={t('login.email')}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -29,7 +31,7 @@ export function LoginPage() {
           autoComplete="email"
         />
         <AppTextField
-          label="Password"
+          label={t('login.password')}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -42,7 +44,7 @@ export function LoginPage() {
           </Typography>
         )}
         <AppButton type="submit" fullWidth sx={{ mt: 2 }} disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? t('login.loggingIn') : t('login.submit')}
         </AppButton>
       </form>
     </PageContainer>

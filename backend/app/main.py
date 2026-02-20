@@ -25,6 +25,8 @@ from app.presentation.middleware.logging_middleware import LoggingMiddleware
 from app.presentation.routes.auth_routes import router as auth_router
 from app.presentation.routes.inventory_session_routes import router as inventory_session_router
 from app.presentation.routes.user_managment_routes import router as user_managment_router
+from app.presentation.routes.warehouse_routes import router as warehouse_router
+from app.presentation.routes.product_routes import router as product_router
 
 
 @asynccontextmanager
@@ -87,3 +89,5 @@ app.add_middleware(LoggingMiddleware)  # type: ignore[arg-type]
 app.include_router(auth_router)
 app.include_router(inventory_session_router)
 app.include_router(user_managment_router)
+app.include_router(warehouse_router)
+app.include_router(product_router)

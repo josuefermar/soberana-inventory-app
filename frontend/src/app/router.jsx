@@ -4,6 +4,7 @@ import { PrivateRoute, RoleGuard } from '../components/guards';
 import { LoginPage, DashboardPage } from '../features/auth/pages';
 import { UsersPage } from '../features/users/pages';
 import {
+  AdminSessionsPage,
   CreateSessionPage,
   RegisterCountPage,
   ViewCountsPage,
@@ -33,6 +34,16 @@ export function AppRouter() {
             <PrivateRoute>
               <RoleGuard allowedRoles={['ADMIN']}>
                 <UsersPage />
+              </RoleGuard>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin-sessions"
+          element={
+            <PrivateRoute>
+              <RoleGuard allowedRoles={['ADMIN']}>
+                <AdminSessionsPage />
               </RoleGuard>
             </PrivateRoute>
           }

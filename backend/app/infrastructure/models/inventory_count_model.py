@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from app.infrastructure.database.database import Base, GUID, utc_now
 
@@ -15,3 +15,7 @@ class InventoryCountModel(Base):
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     session = relationship("InventorySessionModel", back_populates="counts")
+
+    __table_args__ = (
+        UniqueConstraint("session_id", "product_id", name="uq_inventory_count_session_product"),
+    )

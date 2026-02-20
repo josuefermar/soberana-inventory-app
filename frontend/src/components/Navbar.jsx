@@ -1,10 +1,13 @@
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { LanguageSelector } from './ui';
 
 export function Navbar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -38,8 +41,9 @@ export function Navbar() {
               <Typography variant="body2" sx={{ flexGrow: 1, color: 'primary.contrastText' }}>
                 {user.role}
               </Typography>
+              <LanguageSelector />
               <Button color="inherit" onClick={handleLogout}>
-                Logout
+                {t('common.logout')}
               </Button>
             </>
           )}
