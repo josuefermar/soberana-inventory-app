@@ -7,7 +7,7 @@ import {
   AppLoader,
   AppSnackbar,
   AppTable,
-  AppTextField,
+  MonthPicker,
 } from '../../../components/ui';
 import { AppSelect } from '../../../components/ui/Select';
 import { WarehouseAutocomplete } from '../../warehouses/components';
@@ -80,14 +80,12 @@ export function AdminSessionsPage() {
           multiple={false}
           label={t('inventorySessions.warehouseColumn')}
         />
-        <AppTextField
+        <MonthPicker
           label={t('inventorySessions.monthColumn')}
-          type="month"
           value={filters.month}
-          onChange={(e) => setFilters((f) => ({ ...f, month: e.target.value }))}
-          InputLabelProps={{ shrink: true }}
+          onChange={(month) => setFilters((f) => ({ ...f, month }))}
           size="small"
-          sx={{ minWidth: 160 }}
+          sx={{ minWidth: 200 }}
         />
         <AppSelect
           label={t('inventorySessions.status')}

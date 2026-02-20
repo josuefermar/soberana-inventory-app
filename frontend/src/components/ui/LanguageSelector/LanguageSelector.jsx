@@ -6,20 +6,31 @@ const labels = { en: 'English', es: 'Español' };
 
 /**
  * Language selector. Persists choice to localStorage via i18n.
+ * Always shows selected language; uses theme colors so text is never hidden (e.g. white on white).
  */
 export function LanguageSelector() {
-  const { i18n } = useTranslation();
-  const current = i18n.language && supportedLngs.includes(i18n.language) ? i18n.language : 'en';
+  const { t, i18n } = useTranslation();
+  const base = (i18n.language || i18n.resolvedLanguage || 'en').split('-')[0];
+  const current = supportedLngs.includes(base) ? base : 'en';
+  const label = t('common.language');
 
   return (
-    <FormControl size="small" sx={{ minWidth: 100 }}>
-      <InputLabel id="language-label">Lang</InputLabel>
+    <FormControl size="small" sx={{ minWidth: 120 }}>
+      <InputLabel id="language-label" sx={{ color: 'text.secondary' }}>
+        {label}
+      </InputLabel>
       <Select
         labelId="language-label"
         value={current}
-        label="Lang"
+        label={label}
         onChange={(e) => setStoredLanguage(e.target.value)}
-        sx={{ color: 'primary.contrastText', '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.3)' } }}
+        renderValue={(value) => labels[value] ?? value}
+        sx={{
+          color: 'text.primary',
+          backgroundColor: 'background.paper',
+          '.MuiOutlinedInput-notchedOutline': { borderColor: 'divider' },
+          '& .MuiSelect-select': { color: 'text.primary' },
+        }}
       >
         {supportedLngs.map((lng) => (
           <MenuItem key={lng} value={lng}>

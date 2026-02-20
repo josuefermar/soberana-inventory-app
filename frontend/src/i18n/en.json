@@ -134,6 +134,7 @@
   "common": {
     "logout": "Logout",
     "loading": "Loading...",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "language": "Language"
   }
 }

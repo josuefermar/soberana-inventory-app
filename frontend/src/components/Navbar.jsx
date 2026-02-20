@@ -28,9 +28,6 @@ export function Navbar() {
             alt="La Soberana"
             className={styles.logo}
           />
-          <Typography component="span" className={styles.brand}>
-            La Soberana
-          </Typography>
         </Box>
         {user && (
           <>

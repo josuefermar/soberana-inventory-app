@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { PageContainer } from '../../../components/layout';
-import { AppButton, AppSnackbar, AppTextField } from '../../../components/ui';
+import { AppButton, AppSnackbar, MonthPicker } from '../../../components/ui';
 import { WarehouseAutocomplete } from '../../warehouses/components';
 import { ProductCountTable } from '../components';
 import {
@@ -69,13 +69,11 @@ export function CreateSessionPage() {
             multiple={false}
             required
           />
-          <AppTextField
+          <MonthPicker
             label={t('inventorySessions.month')}
-            type="month"
             value={month}
-            onChange={(e) => setMonth(e.target.value)}
+            onChange={setMonth}
             required
-            InputLabelProps={{ shrink: true }}
             sx={{ mt: 2 }}
           />
           <Typography variant="subtitle2" color="text.secondary" sx={{ mt: 2, mb: 1 }}>

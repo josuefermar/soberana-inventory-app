@@ -1,8 +1,8 @@
 // Soberana S.A.S — Design tokens
-// Tradición, nutrición y bienestar familiar
+// Tradición, nutrición y bienestar familiar. Sector alimentos: confianza, claridad, bienestar.
 
-// Colors
-$soberana-green: #2E8B3C;
+// Colors — Verde corporativo principal
+$soberana-green: #2E7D32;
 $soberana-green-light: #4CAF50;
 $soberana-green-dark: #1B6E33;
 $soberana-grain: #F4C430;
@@ -19,6 +19,9 @@ $soberana-gray-900: #212121;
 $soberana-border: #E0E0E0;
 $soberana-table-header: #F5F5F5;
 $soberana-focus: $soberana-green;
+// Alertas y estados (discretos, legibles)
+$soberana-alert-soft: rgba($soberana-grain, 0.2);
+$soberana-difference-soft: rgba(198, 40, 40, 0.12);
 
 // Typography
 $font-family: 'Open Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;

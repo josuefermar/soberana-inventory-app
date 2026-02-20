@@ -78,6 +78,7 @@ export function ProductRow({
     <TableRow>
       <TableCell>
         <Autocomplete
+          id={`product-autocomplete-${row.id}`}
           size="small"
           fullWidth
           options={productOptions}

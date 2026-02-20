@@ -4,7 +4,17 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.9 (WIP)
+## v0.0.10 (WIP)
+
+- [feature] Frontend: MonthPicker — MUI X DatePicker (year/month views, format MMMM YYYY, value YYYY-MM); used in AdminSessionsPage (month filter) and CreateSessionPage (month field)
+- [feature] Frontend: date picker setup — LocalizationProvider + AdapterDayjs in AppProviders; dayjs + dayjs/locale/es; @mui/x-date-pickers and dayjs deps
+- [feature] Frontend: LanguageSelector — label from i18n (common.language); renderValue for locale labels; styles for light theme (text.primary, background.paper)
+- [feature] Frontend: theme — primary green #2E7D32; error #C62828; MuiChip and MuiAlert overrides (success/warning/error soft backgrounds); TextField white background (light)
+- [feature] Frontend: soberana-tokens — green #2E7D32; alert-soft and difference-soft tokens
+- [feature] Frontend: ProductRow — unique id on product Autocomplete (product-autocomplete-{row.id})
+- [config] Frontend: i18n common.language (en/es); Navbar/Navbar.module.scss minor cleanup
+
+## v0.0.9
 
 - [feature] Frontend: AppLayout — Navbar + Sidebar + Outlet; private routes nested under layout; router refactor (paths /dashboard, /users, etc. as children of /)
 - [feature] Frontend: Sidebar — icon nav (Dashboard, Admin Sessions, Create Session, Users, Measures, Feature Flags, Logout); role-based visibility; NavLink active state; SCSS module

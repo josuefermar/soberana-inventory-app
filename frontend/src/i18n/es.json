@@ -134,6 +134,7 @@
   "common": {
     "logout": "Cerrar sesión",
     "loading": "Cargando...",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "language": "Idioma"
   }
 }

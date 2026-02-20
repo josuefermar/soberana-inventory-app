@@ -8,3 +8,4 @@ export { AppLoader } from './Loader';
 export { AppCard } from './Card';
 export { DashboardCard } from './DashboardCard';
 export { LanguageSelector } from './LanguageSelector';
+export { MonthPicker } from './MonthPicker';

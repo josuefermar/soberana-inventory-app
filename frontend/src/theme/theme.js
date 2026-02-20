@@ -1,14 +1,15 @@
 import { createTheme } from '@mui/material/styles';
 
+// Soberana S.A.S — Corporativo, confianza, claridad (sector alimentos)
 const primaryPalette = {
   dark: '#1B6E33',
-  main: '#2E8B3C',
+  main: '#2E7D32', // Verde corporativo principal
   light: '#4CAF50',
 };
 
 const secondaryPalette = {
   dark: '#E6B800',
-  main: '#F4C430',
+  main: '#F4C430', // Amarillo suave para alertas
   light: '#FFD95A',
 };
 
@@ -27,7 +28,8 @@ const lightPalette = {
     contrastText: '#212121',
   },
   error: {
-    main: '#D32F2F',
+    main: '#C62828', // Rojo suave para diferencias/errores
+    light: '#EF5350',
     contrastText: '#FFFFFF',
   },
   warning: {
@@ -188,6 +190,7 @@ const getComponentOverrides = (palette) => ({
       root: {
         '& .MuiOutlinedInput-root': {
           borderRadius: shape.borderRadius,
+          backgroundColor: palette.mode === 'light' ? '#FFFFFF' : undefined,
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: palette.primary.main,
             borderWidth: 2,
@@ -199,6 +202,41 @@ const getComponentOverrides = (palette) => ({
         '& .MuiInputLabel-root.Mui-focused': {
           color: palette.primary.main,
         },
+      },
+    },
+  },
+  MuiChip: {
+    styleOverrides: {
+      root: {
+        borderRadius: 6,
+        fontWeight: 500,
+      },
+      colorDefault: {
+        backgroundColor: palette.mode === 'light' ? '#F5F5F5' : 'rgba(255,255,255,0.08)',
+        color: palette.text.secondary,
+      },
+      colorSuccess: {
+        backgroundColor: palette.mode === 'light' ? 'rgba(46, 125, 50, 0.12)' : undefined,
+      },
+      colorWarning: {
+        backgroundColor: palette.mode === 'light' ? 'rgba(244, 196, 48, 0.2)' : undefined,
+      },
+      colorError: {
+        backgroundColor: palette.mode === 'light' ? 'rgba(198, 40, 40, 0.12)' : undefined,
+      },
+    },
+  },
+  MuiAlert: {
+    styleOverrides: {
+      root: {
+        borderRadius: shape.borderRadius,
+      },
+      standardWarning: {
+        backgroundColor: palette.mode === 'light' ? 'rgba(244, 196, 48, 0.15)' : undefined,
+        color: palette.mode === 'light' ? '#5D4E37' : undefined,
+      },
+      standardError: {
+        backgroundColor: palette.mode === 'light' ? 'rgba(198, 40, 40, 0.1)' : undefined,
       },
     },
   },
