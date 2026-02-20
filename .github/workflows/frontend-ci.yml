@@ -40,7 +40,7 @@ jobs:
         run: npm ci
 
       - name: Type check
-        run: npx tsc -p tsconfig.app.json --noEmit
+        run: npx tsc --noEmit -p tsconfig.app.json
 
       - name: Build
         run: npm run build
