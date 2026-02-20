@@ -4,7 +4,12 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.15 (WIP)
+## v0.0.16 (WIP)
+
+## v0.0.15
+
+- [bugfix] Backend: CreateInventorySessionUseCase unit tests — inject _FakeFeatureFlagService (is_enabled False) so date-restriction rule is not applied in tests
+- [config] Frontend: main.tsx imports App from ./app/App; App.d.ts and theme.d.ts for TypeScript (declare App, createAppTheme)
 
 ## v0.0.14
 
