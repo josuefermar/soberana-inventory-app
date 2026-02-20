@@ -9,6 +9,7 @@ on:
       - '**/Dockerfile'
       - 'docker-compose.yml'
       - 'docker-compose*.yml'
+      - '.github/workflows/docker-ci.yml'
   pull_request:
     branches: [main, master]
     paths:
@@ -17,6 +18,11 @@ on:
       - '**/Dockerfile'
       - 'docker-compose.yml'
       - 'docker-compose*.yml'
+      - '.github/workflows/docker-ci.yml'
+
+concurrency:
+  group: docker-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-backend:
@@ -33,6 +39,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./backend
+          file: ./backend/Dockerfile
           push: false
           load: true
           tags: backend:latest
@@ -53,6 +60,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
+          file: ./frontend/Dockerfile
           push: false
           load: true
           tags: frontend:latest

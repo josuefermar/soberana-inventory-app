@@ -5,15 +5,25 @@ on:
     branches: [main, master]
     paths:
       - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
   pull_request:
     branches: [main, master]
     paths:
       - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
     name: Build and test
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
 
     services:
       postgres:
@@ -48,13 +58,12 @@ jobs:
             ${{ runner.os }}-pip-backend-
 
       - name: Install dependencies
-        run: |
-          cd backend
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
+
+      - name: Verify app loads
+        run: python -c "from app.main import app; assert app.title == 'Soberana API'"
 
       - name: Run tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
-        run: |
-          cd backend
-          pytest -v
+        run: python -m pytest tests/ -v

@@ -15,6 +15,10 @@
 - [feature] Backend: POST /inventory-sessions/{session_id}/counts (WAREHOUSE_MANAGER, warehouse-scoped) and GET .../counts (ADMIN, PROCESS_LEADER)
 - [feature] Backend: Product and InventoryCount repositories (domain + infrastructure), clean hexagonal boundaries
 - [feature] Backend: structured logging for seeder, sync endpoint, inventory count creation, and access denied events
+- [config] CI: backend-ci — concurrency cancel-in-progress, working-directory backend, verify app loads step, simplified pip/pytest
+- [config] CI: frontend-ci — concurrency cancel-in-progress, working-directory frontend, simplified npm steps
+- [config] CI: docker-ci — concurrency cancel-in-progress, explicit Dockerfile paths for backend/frontend, workflow in trigger paths
+- [bugfix] Backend: type-safe exception handlers in main.py (cast to ExceptionHandler for add_exception_handler)
 
 ## v0.0.1 
 

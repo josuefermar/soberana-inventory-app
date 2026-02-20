@@ -1,11 +1,13 @@
 import os
 from contextlib import asynccontextmanager
+from typing import cast
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
 from fastapi import FastAPI
+from starlette.types import ExceptionHandler
 
 from app.domain.exceptions.business_exceptions import BusinessRuleViolation, NotFoundException
 from app.infrastructure.seeders.user_seeder import seed_users_if_empty
@@ -38,8 +40,12 @@ def health_check() -> dict:
     return {"status": "ok"}
 
 
-app.add_exception_handler(BusinessRuleViolation, business_rule_exception_handler)
-app.add_exception_handler(NotFoundException, not_found_exception_handler)
+app.add_exception_handler(
+    BusinessRuleViolation, cast(ExceptionHandler, business_rule_exception_handler)
+)
+app.add_exception_handler(
+    NotFoundException, cast(ExceptionHandler, not_found_exception_handler)
+)
 app.add_middleware(LoggingMiddleware)  # type: ignore[arg-type]
 
 app.include_router(auth_router)
