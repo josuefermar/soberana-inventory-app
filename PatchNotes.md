@@ -6,6 +6,7 @@
 
 ## v0.0.2 (WIP)
 - [bugfix] Remove deprecated noImplicitUseStrict from frontend tsconfig.json
+- [feature] Added models and entities in backend
 
 ## v0.0.1 
 
