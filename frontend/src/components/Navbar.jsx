@@ -12,7 +12,7 @@ export function Navbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="primary">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ gap: 2 }}>
           <Box
@@ -35,7 +35,7 @@ export function Navbar() {
           </Box>
           {user && (
             <>
-              <Typography variant="body2" sx={{ flexGrow: 1 }}>
+              <Typography variant="body2" sx={{ flexGrow: 1, color: 'primary.contrastText' }}>
                 {user.role}
               </Typography>
               <Button color="inherit" onClick={handleLogout}>

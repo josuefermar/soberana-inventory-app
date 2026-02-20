@@ -10,16 +10,16 @@ Quick reference for running the backend against a local database.
 
 ## Optional: PostgreSQL
 
-**Postgres en Docker (`db_local/docker-compose.yml`):** puerto **5433**.
+**Postgres con Docker dev (desde la raíz del repo):** puerto **5432**.
 
-1. Levantar: `cd db_local && docker compose up -d`
+1. Levantar: `docker compose up -d db` (o `docker compose -f docker-compose.dev.yml up -d db`).
 2. En `backend/.env`:
    ```env
-   DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5433/postgres
+   DATABASE_URL=postgresql+psycopg2://postgres:postgres@localhost:5432/postgres
    ```
 3. Migraciones desde `backend/`: `PYTHONPATH=. python -m alembic upgrade head`
 
-**Postgres instalado en la máquina:** usa puerto 5432 y tu usuario/DB en la URL.
+**Postgres instalado en la máquina:** usa puerto 5432 (o el que tengas) y tu usuario/DB en la URL.
 
 ## Alembic (from `backend/`)
 

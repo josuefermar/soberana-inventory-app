@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.types import ExceptionHandler
 
 from app.domain.exceptions.business_exceptions import BusinessRuleViolation, NotFoundException
@@ -57,6 +58,16 @@ app = FastAPI(
     title="La Soberana API",
     description="Backend API for La Soberana",
     lifespan=lifespan,
+)
+
+# CORS: allow frontend (and other configured origins) to call the API
+_cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").strip()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in _cors_origins.split(",") if o.strip()],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

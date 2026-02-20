@@ -4,7 +4,20 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.3 (WIP)
+## v0.0.4 (WIP)
+
+- [feature] Backend: CORS middleware — allow frontend origins via CORS_ORIGINS (default localhost:5173), credentials, all methods/headers
+- [config] docker-compose.dev.yml: Postgres host port 5433 (was 5432) to avoid conflict with local Postgres
+- [config] db_local/: remove README and docker-compose; backend/db_local.md updated for running DB via docker-compose dev
+- [feature] Frontend: feature-based structure — app/ (App, AppProviders, router), features/auth (useLogin, LoginPage, DashboardPage, authService), features/inventory (useCreateSession, useRegisterCount, useViewCounts; CreateSessionPage, RegisterCountPage, ViewCountsPage; inventoryService), features/users (useUsers, UsersPage, usersService)
+- [feature] Frontend: shared UI components — Button, Card, Dialog, Input, Loader, Select, Snackbar, Table under components/ui/
+- [feature] Frontend: layout components — FormContainer, PageContainer, Section under components/layout/
+- [feature] Frontend: feedback components — AppErrorBoundary, ErrorFallback under components/feedback/
+- [feature] Frontend: guards moved to components/guards/ (PrivateRoute, RoleGuard)
+- [feature] Frontend: shared hooks useAsync, useSnackbar; constants/roles; theme (theme.js); utils dateFormat, errorHandling
+- [config] Frontend: apiClient moved from api/ to services/; main entry uses AppProviders; old pages/ removed in favor of features/*/pages
+
+## v0.0.3
 
 - [feature] Backend: WarehouseRepository list_active() (domain + impl) for active warehouses
 - [feature] Backend: default admin user (admin@admin.com) ensured on startup via ensure_default_admin_exists; user seeder creates admin with hashed password and all active warehouses when missing
