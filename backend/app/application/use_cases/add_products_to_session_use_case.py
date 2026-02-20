@@ -47,10 +47,13 @@ class AddProductsToSessionUseCase:
             if not product:
                 raise NotFoundException(f"Product not found: {product_id}")
 
+            measure_unit_id = product.packaging_unit
+
             count = InventoryCount(
                 id=uuid4(),
                 session_id=session_id,
                 product_id=product_id,
+                measure_unit_id=measure_unit_id,
                 quantity_packages=0,
                 quantity_units=0,
                 created_at=now,

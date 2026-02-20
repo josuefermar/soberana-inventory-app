@@ -100,6 +100,7 @@ export function useCreateSession() {
           await registerCountApi(sessionId, {
             product_id: row.product_id,
             packaging_quantity: packagingQuantity,
+            measure_unit_id: row.measure_unit_id || undefined,
           });
         }
         setSnack({

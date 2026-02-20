@@ -74,10 +74,13 @@ export function SessionDetailDialog({ open, onClose, session }) {
         id: `session-detail-row-${session?.id}-${row.product?.id ?? idx}-${idx}`,
         code: row.product?.code ?? '—',
         description: row.product?.description ?? '—',
-        inventory_unit: '—',
-        packaging_unit: '—',
+        inventory_unit: row.measure_unit?.name ?? '—',
+        packaging_unit: row.measure_unit?.abbreviation ?? '—',
         quantity_packaging: row.packaging_quantity,
-        conversion_factor: '—',
+        conversion_factor:
+          row.product?.conversion_factor == null
+            ? '—'
+            : Number(row.product.conversion_factor),
         quantity_units: row.total_units,
       })),
     [counts, session?.id]

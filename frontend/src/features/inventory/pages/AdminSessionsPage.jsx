@@ -57,6 +57,7 @@ export function AdminSessionsPage() {
     filters,
     setFilters,
     loadSessions,
+    resetFilters,
     snack,
     closeSnack,
     formatDate,
@@ -119,6 +120,9 @@ export function AdminSessionsPage() {
         />
         <AppButton onClick={loadSessions} disabled={loading}>
           {t('inventorySessions.applyFilters')}
+        </AppButton>
+        <AppButton variant="outlined" onClick={resetFilters} disabled={loading}>
+          {t('inventorySessions.clearFilters')}
         </AppButton>
       </Box>
       {loading && <AppLoader message={t('common.loading')} />}

@@ -27,6 +27,11 @@ class MeasurementUnitRepository(ABC):
         pass
 
     @abstractmethod
+    def get_by_ids(self, ids: List[UUID]) -> List[MeasurementUnit]:
+        """Return measurement units for the given ids (order not guaranteed)."""
+        pass
+
+    @abstractmethod
     def get_by_name(self, name: str) -> Optional[MeasurementUnit]:
         """Return measurement unit by name or None."""
         pass

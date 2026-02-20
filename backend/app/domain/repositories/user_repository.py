@@ -16,6 +16,11 @@ class UserRepository(ABC):
         pass
 
     @abstractmethod
+    def get_by_ids(self, user_ids: list[UUID]) -> list[User]:
+        """Return users for the given ids (e.g. to enrich session list with creator names)."""
+        pass
+
+    @abstractmethod
     def list_all(self) -> list[User]:
         pass
 

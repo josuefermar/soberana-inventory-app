@@ -9,6 +9,7 @@ from app.application.use_cases.add_products_to_session_use_case import (
 )
 from app.domain.entities.inventory_count import InventoryCount
 from app.domain.entities.inventory_session import InventorySession
+from app.domain.entities.product import Product
 from app.domain.exceptions.business_exceptions import (
     BusinessRuleViolation,
     NotFoundException,
@@ -52,11 +53,25 @@ class _FakeCountRepo:
 
 
 class _FakeProductRepo:
-    def __init__(self, product_ids=None):
+    def __init__(self, product_ids=None, now=None):
         self.product_ids = set(product_ids or [])
+        self.now = now or datetime.now(timezone.utc)
 
     def get_by_id(self, product_id):
-        return True if str(product_id) in {str(p) for p in self.product_ids} else None
+        if str(product_id) not in {str(p) for p in self.product_ids}:
+            return None
+        unit_id = uuid4()
+        return Product(
+            id=product_id,
+            code="CODE",
+            description="Product",
+            inventory_unit=unit_id,
+            packaging_unit=unit_id,
+            conversion_factor=1.0,
+            is_active=True,
+            created_at=self.now,
+            updated_at=self.now,
+        )
 
 
 def test_add_products_skips_duplicates():

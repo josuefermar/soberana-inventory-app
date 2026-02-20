@@ -15,6 +15,7 @@ class InventorySessionModel(Base):
     closed_at = Column(DateTime, nullable=True)
 
     warehouse = relationship("WarehouseModel", back_populates="sessions")
+    creator = relationship("UserModel", foreign_keys=[created_by])
     counts = relationship("InventoryCountModel", back_populates="session")
 
     __table_args__ = (

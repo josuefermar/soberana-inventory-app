@@ -32,6 +32,7 @@ class RegisterInventoryCountUseCase:
         packaging_quantity: int,
         user_warehouse_ids: list[UUID],
         is_admin: bool = False,
+        measure_unit_id: UUID | None = None,
     ) -> InventoryCount:
         session = self.session_repository.get_by_id(session_id)
         if not session:
@@ -57,6 +58,8 @@ class RegisterInventoryCountUseCase:
                 "This product has already been counted in this session."
             )
 
+        unit_id = measure_unit_id if measure_unit_id is not None else product.packaging_unit
+
         factor = int(product.conversion_factor)
         total_units = UnitConversionService.calculate_total_units(packaging_quantity, factor)
 
@@ -65,6 +68,7 @@ class RegisterInventoryCountUseCase:
             id=uuid4(),
             session_id=session_id,
             product_id=product_id,
+            measure_unit_id=unit_id,
             quantity_packages=packaging_quantity,
             quantity_units=total_units,
             created_at=now,

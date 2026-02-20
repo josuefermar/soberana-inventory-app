@@ -4,6 +4,7 @@ from typing import Optional, List, cast
 from sqlalchemy.orm import Session
 
 from app.domain.entities.inventory_session import InventorySession
+from app.domain.exceptions.business_exceptions import NotFoundException
 from app.domain.repositories.inventory_session_repository import InventorySessionRepository
 from app.infrastructure.models.inventory_session_model import InventorySessionModel
 
@@ -26,6 +27,19 @@ class InventorySessionRepositoryImpl(InventorySessionRepository):
         self.db.commit()
         self.db.refresh(db_session)
 
+        return self._to_domain(db_session)
+
+    def update(self, session: InventorySession) -> InventorySession:
+        db_session = (
+            self.db.query(InventorySessionModel)
+            .filter(InventorySessionModel.id == session.id)
+            .first()
+        )
+        if not db_session:
+            raise NotFoundException("Inventory session not found")
+        db_session.closed_at = session.closed_at
+        self.db.commit()
+        self.db.refresh(db_session)
         return self._to_domain(db_session)
 
     def get_by_id(self, session_id: UUID) -> Optional[InventorySession]:

@@ -38,6 +38,16 @@ class UserRepositoryImpl(UserRepository):
             return None
         return self._to_domain(model)
 
+    def get_by_ids(self, user_ids: list[UUID]) -> list[User]:
+        if not user_ids:
+            return []
+        models = (
+            self.db.query(UserModel)
+            .filter(UserModel.id.in_(user_ids))
+            .all()
+        )
+        return [self._to_domain(m) for m in models]
+
     def list_all(self) -> list[User]:
         models = (
             self.db.query(UserModel)

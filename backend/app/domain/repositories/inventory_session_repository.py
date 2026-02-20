@@ -13,6 +13,11 @@ class InventorySessionRepository(ABC):
         pass
 
     @abstractmethod
+    def update(self, session: InventorySession) -> InventorySession:
+        """Update an existing session (e.g. set closed_at)."""
+        pass
+
+    @abstractmethod
     def get_by_id(self, session_id: UUID) -> Optional[InventorySession]:
         pass
 

@@ -9,12 +9,14 @@ class InventoryCountModel(Base):
     id = Column(GUID(), primary_key=True, index=True)
     session_id = Column(GUID(), ForeignKey("inventory_sessions.id"), nullable=False)
     product_id = Column(GUID(), ForeignKey("products.id"), nullable=False)
+    measure_unit_id = Column(GUID(), ForeignKey("measurement_units.id"), nullable=False)
     quantity_packages = Column(Integer, nullable=False)
     quantity_units = Column(Integer, nullable=False)
     created_at = Column(DateTime, default=utc_now, nullable=False)
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
     session = relationship("InventorySessionModel", back_populates="counts")
+    measurement_unit = relationship("MeasurementUnitModel", foreign_keys=[measure_unit_id])
 
     __table_args__ = (
         UniqueConstraint("session_id", "product_id", name="uq_inventory_count_session_product"),

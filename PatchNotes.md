@@ -4,7 +4,18 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.11 (WIP)
+## v0.0.12 (WIP)
+
+- [feature] Backend: CloseInventorySessionUseCase — set closed_at on session; only open sessions; InventorySessionRepository.update()
+- [feature] Backend: inventory session list — ListInventorySessionsUseCase and API include created_by_id, created_by_name (UserRepository.get_by_ids); response status OPEN/CLOSED
+- [feature] Backend: measure_unit_id on counts — InventoryCount entity and AddProductsToSessionUseCase/RegisterInventoryCountUseCase set measure_unit_id (product.packaging_unit or param); migration h07n3f4b5c6d7 (FK, backfill from product.packaging_unit_id)
+- [feature] Backend: MeasurementUnitRepository.get_by_ids; UserRepository.get_by_ids; inventory_session_routes close endpoint (ADMIN, PROCESS_LEADER)
+- [feature] Frontend: SessionDetailDialog — detail table shows measure_unit name/abbreviation and conversion_factor from count/product
+- [feature] Frontend: useCreateSession — register count payload includes measure_unit_id from row
+- [feature] Frontend: AdminSessionsPage — resetFilters in useAdminSessions; "Clear filters" button
+- [config] Backend: unit test AddProductsToSession — _FakeProductRepo returns Product with packaging_unit
+
+## v0.0.11
 
 - [feature] Backend: sync users from API — synced users get random role (WAREHOUSE_MANAGER or PROCESS_LEADER), never ADMIN
 - [feature] Frontend: SessionDetailDialog — modal with session summary (created by, date, warehouse, month) and products/counts table; fetches getCounts(session.id); SessionDetailDialog.module.scss

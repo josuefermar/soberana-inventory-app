@@ -40,6 +40,16 @@ class MeasurementUnitRepositoryImpl(MeasurementUnitRepository):
             return None
         return self._to_domain(model)
 
+    def get_by_ids(self, ids: List[UUID]) -> List[MeasurementUnit]:
+        if not ids:
+            return []
+        models = (
+            self.db.query(MeasurementUnitModel)
+            .filter(MeasurementUnitModel.id.in_(ids))
+            .all()
+        )
+        return [self._to_domain(m) for m in models]
+
     def get_by_name(self, name: str) -> Optional[MeasurementUnit]:
         model = (
             self.db.query(MeasurementUnitModel).filter(MeasurementUnitModel.name == name).first()

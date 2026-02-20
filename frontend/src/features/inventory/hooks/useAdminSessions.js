@@ -3,6 +3,12 @@ import { getErrorMessage } from '../../../utils/errorHandling';
 import { listSessions } from '../services/inventoryService';
 import { formatDateTime } from '../../../utils';
 
+const DEFAULT_FILTERS = {
+  warehouse_id: '',
+  month: '',
+  status: '',
+};
+
 /**
  * Admin inventory sessions list with filters.
  * @returns {{
@@ -11,6 +17,7 @@ import { formatDateTime } from '../../../utils';
  *   filters: { warehouse_id: string; month: string; status: string };
  *   setFilters: React.Dispatch<React.SetStateAction<{ warehouse_id: string; month: string; status: string }>>;
  *   loadSessions: () => Promise<void>;
+ *   resetFilters: () => void;
  *   snack: { open: boolean; message: string; severity: string };
  *   closeSnack: () => void;
  *   formatDate: (d: string) => string;
@@ -19,11 +26,7 @@ import { formatDateTime } from '../../../utils';
 export function useAdminSessions() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({
-    warehouse_id: '',
-    month: '',
-    status: '',
-  });
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [snack, setSnack] = useState({
     open: false,
     message: '',
@@ -58,12 +61,17 @@ export function useAdminSessions() {
     loadSessions();
   }, [loadSessions]);
 
+  const resetFilters = useCallback(() => {
+    setFilters(DEFAULT_FILTERS);
+  }, []);
+
   return {
     sessions,
     loading,
     filters,
     setFilters,
     loadSessions,
+    resetFilters,
     snack,
     closeSnack,
     formatDate: (d) => (d ? formatDateTime(d) : '—'),
