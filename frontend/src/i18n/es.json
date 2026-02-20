@@ -9,8 +9,6 @@
   "users": {
     "title": "Usuarios",
     "refresh": "Actualizar",
-    "syncUsers": "Sincronizar usuarios",
-    "syncing": "Sincronizando...",
     "createUser": "Crear usuario",
     "editUser": "Editar usuario",
     "cancel": "Cancelar",
@@ -37,8 +35,7 @@
     "cannotEditSelf": "No puedes modificar tu propio usuario",
     "deactivate": "Desactivar",
     "confirmDeactivateTitle": "¿Desactivar usuario?",
-    "confirmDeactivateMessage": "¿Estás seguro de que quieres desactivar a {{name}}?",
-    "synced": "Sincronizado. Usuarios creados: {{count}}"
+    "confirmDeactivateMessage": "¿Estás seguro de que quieres desactivar a {{name}}?"
   },
   "inventorySessions": {
     "title": "Crear sesión de inventario",
@@ -109,7 +106,6 @@
     "role": "Rol",
     "manageUsers": "Gestionar usuarios",
     "createSession": "Crear sesión de inventario",
-    "syncUsers": "Sincronizar usuarios",
     "registerCount": "Registrar conteo",
     "viewCounts": "Ver conteos",
     "inventorySessions": "Sesiones de inventario",

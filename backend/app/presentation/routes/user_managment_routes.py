@@ -1,7 +1,9 @@
+import os
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+import httpx
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel, field_validator
 from sqlalchemy.orm import Session
 
 from app.application.use_cases.sync_users_from_api import SyncUsersFromCorporateAPIUseCase
@@ -11,6 +13,7 @@ from app.application.use_cases.user_managment.update_user_case import UpdateUser
 from app.domain.entities.user_role import UserRole
 from app.infrastructure.external.random_user_client import RandomUserClient
 from app.infrastructure.logging.logger import logger
+from app.infrastructure.mock.corporate_users_faker import fetch_users as mock_fetch_users
 from app.infrastructure.repositories.user_repository_impl import UserRepositoryImpl
 from app.presentation.dependencies.database import get_db
 from app.presentation.dependencies.role_dependencies import require_roles
@@ -42,6 +45,24 @@ class SyncUsersResponse(BaseModel):
     users_created: int
 
 
+MAX_RESULTS_PER_SYNC = 100
+
+
+class SyncFromApiPayload(BaseModel):
+    """Payload with raw results from randomuser.me API (e.g. fetched by frontend)."""
+
+    results: list[dict]
+
+    @field_validator("results")
+    @classmethod
+    def results_max_length(cls, v: list) -> list:
+        if len(v) > MAX_RESULTS_PER_SYNC:
+            raise ValueError(
+                f"Maximum {MAX_RESULTS_PER_SYNC} results per sync. Received {len(v)}."
+            )
+        return v
+
+
 class UserResponse(BaseModel):
     id: str
     identification: str
@@ -64,23 +85,75 @@ class UserResponse(BaseModel):
         )
 
 
+def _get_corporate_users_fetcher():
+    """Injection: USER_SYNC_MODE=mock uses Faker; external uses RandomUser API."""
+    mode = (os.getenv("USER_SYNC_MODE") or "external").strip().lower()
+    if mode == "mock":
+        return mock_fetch_users
+    client = RandomUserClient()
+    return client.fetch_users
+
+
 @router.post("/sync", response_model=SyncUsersResponse)
 def sync_users(
     db: Session = Depends(get_db),
     _current_user=Depends(require_roles([UserRole.ADMIN])),
 ):
+    """
+    Sync users from corporate API. Fetcher chosen by USER_SYNC_MODE:
+    - mock: Faker (internal, no external calls)
+    - external: randomuser.me
+    """
     repository = UserRepositoryImpl(db)
-    client = RandomUserClient()
+    fetcher = _get_corporate_users_fetcher()
     use_case = SyncUsersFromCorporateAPIUseCase(
         user_repository=repository,
-        api_fetcher=lambda limit: client.fetch_users(limit),
+        api_fetcher=fetcher,
     )
-    created = use_case.execute(100)
+    try:
+        created, fetched = use_case.execute(MAX_RESULTS_PER_SYNC)
+    except httpx.HTTPError as e:
+        logger.warning(
+            "Sync users: external API failed",
+            extra={"event": "sync_users_api_failed", "error": str(e)},
+        )
+        raise HTTPException(
+            status_code=503,
+            detail="No se pudo conectar con la API de usuarios. Comprueba USER_SYNC_MODE y red.",
+        ) from e
     logger.info(
-        "Sync users endpoint executed",
+        "Sync users executed",
         extra={
             "event": "sync_users_executed",
             "users_created": created,
+            "users_fetched": fetched,
+            "user_id": _current_user.get("sub"),
+        },
+    )
+    return SyncUsersResponse(users_created=created)
+
+
+@router.post("/sync-from-api", response_model=SyncUsersResponse)
+def sync_users_from_payload(
+    payload: SyncFromApiPayload,
+    db: Session = Depends(get_db),
+    _current_user=Depends(require_roles([UserRole.ADMIN])),
+):
+    """
+    Accept raw results from randomuser.me (used by seed script at startup).
+    """
+    repository = UserRepositoryImpl(db)
+    use_case = SyncUsersFromCorporateAPIUseCase(
+        user_repository=repository,
+        api_fetcher=lambda limit: {"results": []},
+    )
+    created, fetched = use_case.execute_from_results(payload.results)
+    logger.info(
+        "Sync users from API payload executed",
+        extra={
+            "event": "sync_users_from_api_payload_executed",
+            "users_created": created,
+            "users_fetched": fetched,
             "user_id": _current_user.get("sub"),
         },
     )

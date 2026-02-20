@@ -1,6 +1,11 @@
 """
-Sync users from corporate (Random User) API.
-Fetches users, maps to domain User, avoids duplicates by email, persists via repository.
+Sync users from corporate API (mock or external).
+
+The use case depends only on a callable api_fetcher(limit) -> dict with key "results"
+(list of raw user dicts: email, name.{first,last}, login.uuid). It does not depend on
+Faker, httpx, or any concrete provider. The fetcher is injected by the presentation
+layer (routes/seeder) according to USER_SYNC_MODE (mock | external).
+Maps to domain User, avoids duplicates by email, persists via repository.
 """
 
 import random
@@ -58,27 +63,30 @@ class SyncUsersFromCorporateAPIUseCase:
     """Fetches users from external API and persists new ones (no duplicate email)."""
 
     def __init__(self, user_repository: UserRepository, api_fetcher: callable):
-        """
-        api_fetcher: callable that returns dict with "results" key (list of raw user dicts).
-        """
         self.user_repository = user_repository
         self.api_fetcher = api_fetcher
 
-    def execute(self, limit: int = 100) -> int:
+    def execute(self, limit: int = 100) -> tuple[int, int]:
         """
-        Fetch users from API, map to User, skip existing email, create rest.
-        Returns number of users created.
+        Fetch users from external API (randomuser.me), map to User, skip existing email, create rest.
+        Returns (users_created, users_fetched_from_api).
         """
         data = self.api_fetcher(limit)
         results = data.get("results") or []
+        return self.execute_from_results(results)
+
+    def execute_from_results(self, results: list[dict]) -> tuple[int, int]:
+        """
+        Process raw results from randomuser.me (e.g. sent by frontend or seed script).
+        Returns (users_created, users_fetched).
+        """
+        fetched = len(results)
         now = datetime.now(timezone.utc)
         created = 0
-
         for raw in results:
             user = _raw_to_user(raw, now)
             if not user or self.user_repository.get_by_email(user.email):
                 continue
             self.user_repository.create(user)
             created += 1
-
-        return created
+        return (created, fetched)

@@ -4,7 +4,18 @@
 - At the beginning of each line add one of the three tags to classify
   the note [feature], [bugfix], [config], [script].
 
-## v0.0.12 (WIP)
+## v0.0.13 (WIP)
+
+- [feature] Backend: CreateInventorySessionUseCase — warehouse access check (non-admin only for assigned warehouses); routes pass user_warehouse_ids and is_admin
+- [feature] Backend: ListWarehousesUseCase(warehouse_ids); WarehouseRepository.list_by_ids; GET /warehouses/ returns only assigned warehouses for WAREHOUSE_MANAGER
+- [feature] Backend: user sync — USER_SYNC_MODE mock | external; corporate_users_faker (Faker) for mock; RandomUserClient configurable URL + User-Agent; SyncUsersFromCorporateAPIUseCase.execute_from_results; POST /users/sync-from-api (payload results); 503 on external API failure; seeder uses mock when USER_SYNC_MODE=mock
+- [feature] Backend: GET /mock/corporate-users (ADMIN) returns fake users in RandomUser shape; assert_warehouse_access refactor; add/list session products check warehouse access
+- [feature] Backend: list inventory sessions and close — PROCESS_LEADER can list sessions; only ADMIN can close session
+- [feature] Frontend: admin-sessions route and Sidebar allow PROCESS_LEADER; remove Dashboard "Sync users" card; useUsers without sync (handleSync/syncLoading removed)
+- [feature] Frontend: cleanup — remove unused App.tsx, FormContainer, Section, AppCard, ProductAutocomplete, productsService.getProducts, inventoryService.addSessionProducts, useSnackbar export
+- [config] Backend: Faker in requirements; docker-compose.dev USER_SYNC_MODE=mock; docker-compose frontend_node_modules volume; frontend .env.example VITE_RANDOM_USER_API_URL
+
+## v0.0.12
 
 - [feature] Backend: CloseInventorySessionUseCase — set closed_at on session; only open sessions; InventorySessionRepository.update()
 - [feature] Backend: inventory session list — ListInventorySessionsUseCase and API include created_by_id, created_by_name (UserRepository.get_by_ids); response status OPEN/CLOSED

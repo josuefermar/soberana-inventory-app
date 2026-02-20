@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.application.services.feature_flag_service import FeatureFlagService
@@ -46,6 +46,7 @@ from app.infrastructure.repositories.user_repository_impl import (
 )
 from app.presentation.dependencies.database import get_db
 from app.presentation.dependencies.role_dependencies import require_roles
+from app.presentation.dependencies.warehouse_dependencies import assert_warehouse_access
 from app.presentation.schemas.inventory_count_schema import (
     CreateInventoryCountRequest,
     InventoryCountResponse,
@@ -71,7 +72,7 @@ def list_inventory_sessions(
     month: str | None = Query(None, description="YYYY-MM"),
     status: str | None = Query(None, description="open | closed"),
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN])),
+    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.PROCESS_LEADER])),
 ):
     month_dt = None
     if month:
@@ -116,17 +117,21 @@ def list_inventory_sessions(
 def create_inventory_session(
     request: CreateInventorySessionRequest,
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
+    current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
 ):
     repository = InventorySessionRepositoryImpl(db)
     feature_flag_repo = FeatureFlagRepositoryImpl(db)
     feature_flag_service = FeatureFlagService(feature_flag_repo)
     use_case = CreateInventorySessionUseCase(repository, feature_flag_service)
 
+    user_warehouse_ids = [UUID(w) for w in current_user.get("warehouses", [])]
+    is_admin = current_user.get("role") == UserRole.ADMIN.value
     result = use_case.execute(
         warehouse_id=request.warehouse_id,
         month=request.month,
         created_by=request.created_by,
+        user_warehouse_ids=user_warehouse_ids,
+        is_admin=is_admin,
     )
 
     user_repo = UserRepositoryImpl(db)
@@ -148,7 +153,7 @@ def create_inventory_session(
 def close_inventory_session(
     session_id: UUID,
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.PROCESS_LEADER])),
+    _current_user=Depends(require_roles([UserRole.ADMIN])),
 ):
     """Close an inventory session. Only open sessions can be closed."""
     session_repo = InventorySessionRepositoryImpl(db)
@@ -174,9 +179,13 @@ def add_session_products(
     session_id: UUID,
     request: AddSessionProductsRequest,
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
+    current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
 ):
     session_repo = InventorySessionRepositoryImpl(db)
+    session = session_repo.get_by_id(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Inventory session not found")
+    assert_warehouse_access(current_user, session.warehouse_id)
     count_repo = InventoryCountRepositoryImpl(db)
     product_repo = ProductRepositoryImpl(db)
     use_case = AddProductsToSessionUseCase(session_repo, count_repo, product_repo)
@@ -188,9 +197,13 @@ def add_session_products(
 def list_session_products(
     session_id: UUID,
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
+    current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
 ):
     session_repo = InventorySessionRepositoryImpl(db)
+    session = session_repo.get_by_id(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Inventory session not found")
+    assert_warehouse_access(current_user, session.warehouse_id)
     count_repo = InventoryCountRepositoryImpl(db)
     product_repo = ProductRepositoryImpl(db)
     use_case = ListSessionProductsFromCountsUseCase(

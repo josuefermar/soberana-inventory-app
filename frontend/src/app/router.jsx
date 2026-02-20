@@ -55,7 +55,7 @@ export function AppRouter() {
         <Route
           path="admin-sessions"
           element={
-            <RoleGuard allowedRoles={['ADMIN']}>
+            <RoleGuard allowedRoles={['ADMIN', 'PROCESS_LEADER']}>
               <AdminSessionsPage />
             </RoleGuard>
           }

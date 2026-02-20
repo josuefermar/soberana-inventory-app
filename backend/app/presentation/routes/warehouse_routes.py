@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -16,11 +18,14 @@ router = APIRouter(prefix="/warehouses", tags=["Warehouses"])
 @router.get("/", response_model=list[WarehouseResponse])
 def list_warehouses(
     db: Session = Depends(get_db),
-    _current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
+    current_user=Depends(require_roles([UserRole.ADMIN, UserRole.WAREHOUSE_MANAGER])),
 ):
     repository = WarehouseRepositoryImpl(db)
     use_case = ListWarehousesUseCase(repository)
-    warehouses = use_case.execute()
+    warehouse_ids = None
+    if current_user.get("role") == UserRole.WAREHOUSE_MANAGER.value:
+        warehouse_ids = [UUID(w) for w in current_user.get("warehouses", [])]
+    warehouses = use_case.execute(warehouse_ids=warehouse_ids)
     return [
         WarehouseResponse(
             id=w.id,

@@ -32,7 +32,6 @@ export function UsersPage() {
   const {
     users,
     loading,
-    syncLoading,
     createOpen,
     setCreateOpen,
     editOpen,
@@ -41,7 +40,6 @@ export function UsersPage() {
     form,
     setForm,
     loadUsers,
-    handleSync,
     handleCreate,
     handleUpdate,
     handleToggle,
@@ -115,14 +113,6 @@ export function UsersPage() {
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
         <AppButton onClick={loadUsers} disabled={loading}>
           {t('users.refresh')}
-        </AppButton>
-        <AppButton
-          variant="outlined"
-          color="secondary"
-          onClick={handleSync}
-          disabled={syncLoading}
-        >
-          {syncLoading ? t('users.syncing') : t('users.syncUsers')}
         </AppButton>
         <AppButton onClick={() => setCreateOpen(true)}>{t('users.createUser')}</AppButton>
       </Box>

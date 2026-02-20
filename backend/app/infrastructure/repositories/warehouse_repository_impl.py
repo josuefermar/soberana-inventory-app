@@ -39,6 +39,17 @@ class WarehouseRepositoryImpl(WarehouseRepository):
         models = self.db.query(WarehouseModel).order_by(WarehouseModel.code).all()
         return [self._to_domain(m) for m in models]
 
+    def list_by_ids(self, warehouse_ids: List[UUID]) -> List[Warehouse]:
+        if not warehouse_ids:
+            return []
+        models = (
+            self.db.query(WarehouseModel)
+            .filter(WarehouseModel.id.in_(warehouse_ids))
+            .order_by(WarehouseModel.code)
+            .all()
+        )
+        return [self._to_domain(m) for m in models]
+
     def save(self, warehouse: Warehouse) -> Warehouse:
         model = WarehouseModel(
             id=warehouse.id,

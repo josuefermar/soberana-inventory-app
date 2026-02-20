@@ -1,6 +1,7 @@
-"""Seeder: sync users from external API when user table is empty; ensure default admin exists."""
+"""Seeder: sync users from corporate API (mock or external) when user table is empty; ensure default admin exists."""
 
 import asyncio
+import os
 from datetime import datetime, timezone
 from uuid import uuid4
 
@@ -10,6 +11,7 @@ from app.domain.entities.user_role import UserRole
 from app.infrastructure.database.database import SessionLocal
 from app.infrastructure.external.random_user_client import RandomUserClient
 from app.infrastructure.logging.logger import logger
+from app.infrastructure.mock.corporate_users_faker import fetch_users as mock_fetch_users
 from app.infrastructure.repositories.user_repository_impl import UserRepositoryImpl
 from app.infrastructure.repositories.warehouse_repository_impl import (
     WarehouseRepositoryImpl,
@@ -85,17 +87,22 @@ async def seed_users_if_empty() -> None:
             )
             return
 
-        client = RandomUserClient()
+        mode = (os.getenv("USER_SYNC_MODE") or "external").strip().lower()
+        if mode == "mock":
+            api_fetcher = mock_fetch_users
+        else:
+            client = RandomUserClient()
+            api_fetcher = client.fetch_users
         use_case = SyncUsersFromCorporateAPIUseCase(
             user_repository=repository,
-            api_fetcher=lambda limit: client.fetch_users(limit),
+            api_fetcher=api_fetcher,
         )
         # Run sync in thread to avoid blocking event loop
-        created = await asyncio.to_thread(use_case.execute, 100)
+        created, fetched = await asyncio.to_thread(use_case.execute, 100)
 
         logger.info(
             "Seeder completed: users synced from API",
-            extra={"event": "seeder_executed", "users_created": created},
+            extra={"event": "seeder_executed", "users_created": created, "users_fetched": fetched},
         )
     finally:
         db.close()

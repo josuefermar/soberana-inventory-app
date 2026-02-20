@@ -9,14 +9,6 @@ export async function getUsers() {
 }
 
 /**
- * @returns {Promise<{ users_created?: number }>}
- */
-export async function syncUsers() {
-  const { data } = await apiClient.post('/users/sync');
-  return data;
-}
-
-/**
  * @param {import('./types').CreateUserPayload} payload
  * @returns {Promise<unknown>}
  */

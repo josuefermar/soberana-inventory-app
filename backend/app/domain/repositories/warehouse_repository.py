@@ -27,5 +27,10 @@ class WarehouseRepository(ABC):
         pass
 
     @abstractmethod
+    def list_by_ids(self, warehouse_ids: List[UUID]) -> List[Warehouse]:
+        """Return warehouses whose id is in warehouse_ids (order not guaranteed)."""
+        pass
+
+    @abstractmethod
     def save(self, warehouse: Warehouse) -> Warehouse:
         pass

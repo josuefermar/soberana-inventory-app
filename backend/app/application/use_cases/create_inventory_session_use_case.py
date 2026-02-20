@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Optional
 from uuid import UUID, uuid4
 
 from app.application.services.feature_flag_service import FeatureFlagService
@@ -36,7 +37,15 @@ class CreateInventorySessionUseCase:
         warehouse_id: UUID,
         month: datetime,
         created_by: UUID,
+        user_warehouse_ids: Optional[list[UUID]] = None,
+        is_admin: bool = False,
     ) -> InventorySession:
+        if user_warehouse_ids is not None and not is_admin:
+            if warehouse_id not in user_warehouse_ids:
+                raise BusinessRuleViolation(
+                    "You can only create sessions for warehouses assigned to you.",
+                )
+
         now_utc = datetime.now(timezone.utc)
         if self.feature_flag_service.is_enabled(FEATURE_FLAG_INVENTORY_DATE_RESTRICTION):
             if now_utc.day not in ALLOWED_SESSION_CREATION_DAYS:

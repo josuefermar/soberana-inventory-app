@@ -7,7 +7,6 @@ import {
   People as UsersIcon,
   Straighten as MeasuresIcon,
   Flag as FeatureFlagsIcon,
-  Sync as SyncIcon,
   Assignment as RegisterCountIcon,
   Visibility as ViewCountsIcon,
   LocalShipping as WarehouseIcon,
@@ -98,17 +97,6 @@ export function DashboardPage() {
               action={
                 <AppButton size="small" variant="outlined" onClick={() => navigate('/feature-flags')}>
                   {t('dashboard.featureFlags')}
-                </AppButton>
-              }
-            />
-            <DashboardCard
-              icon={<SyncIcon fontSize="medium" />}
-              title={t('dashboard.syncUsers')}
-              description={t('users.syncUsers')}
-              accent="grain"
-              action={
-                <AppButton size="small" variant="outlined" onClick={() => navigate('/users')}>
-                  {t('dashboard.syncUsers')}
                 </AppButton>
               }
             />

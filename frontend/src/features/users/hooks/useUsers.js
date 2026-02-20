@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 import { getErrorMessage } from '../../../utils/errorHandling';
 import { getWarehouses } from '../../warehouses/services';
-import { getUsers, syncUsers, createUser, updateUser } from '../services/usersService';
+import { getUsers, createUser, updateUser } from '../services/usersService';
 
 const INITIAL_FORM = {
   identification: '',
@@ -19,7 +19,6 @@ const INITIAL_FORM = {
  * @returns {{
  *   users: Array;
  *   loading: boolean;
- *   syncLoading: boolean;
  *   createOpen: boolean;
  *   setCreateOpen: (v: boolean) => void;
  *   editOpen: boolean;
@@ -30,7 +29,6 @@ const INITIAL_FORM = {
  *   form: typeof INITIAL_FORM & { warehouseOptions?: Array<{ id: string; label: string }> };
  *   setForm: React.Dispatch<React.SetStateAction<typeof INITIAL_FORM>>;
  *   loadUsers: () => Promise<void>;
- *   handleSync: () => Promise<void>;
  *   handleCreate: (e: React.FormEvent) => Promise<void>;
  *   handleUpdate: (userId: string, payload: import('../services/types').UpdateUserPayload) => Promise<void>;
  *   handleToggle: (user: import('../services/types').User) => Promise<void>;
@@ -51,7 +49,6 @@ export function useUsers() {
 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [syncLoading, setSyncLoading] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -99,27 +96,6 @@ export function useUsers() {
   useEffect(() => {
     loadWarehouses();
   }, [loadWarehouses]);
-
-  const handleSync = useCallback(async () => {
-    setSyncLoading(true);
-    try {
-      const data = await syncUsers();
-      setSnack({
-        open: true,
-        message: t('users.synced', { count: data?.users_created ?? 0 }),
-        severity: 'success',
-      });
-      loadUsers();
-    } catch (err) {
-      setSnack({
-        open: true,
-        message: getErrorMessage(err),
-        severity: 'error',
-      });
-    } finally {
-      setSyncLoading(false);
-    }
-  }, [loadUsers, t]);
 
   const handleCreate = useCallback(
     async (e) => {
@@ -238,7 +214,6 @@ export function useUsers() {
   return {
     users,
     loading,
-    syncLoading,
     createOpen,
     setCreateOpen,
     editOpen,
@@ -249,7 +224,6 @@ export function useUsers() {
     form: formWithOptions,
     setForm,
     loadUsers,
-    handleSync,
     handleCreate,
     handleUpdate,
     handleToggle,

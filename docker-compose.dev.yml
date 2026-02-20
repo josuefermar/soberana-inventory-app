@@ -1,5 +1,5 @@
-# Development: hot reload backend + Vite dev server frontend, code mounted as volumes
-version: '3.9'
+# Development: hot reload backend + Vite dev server, code mounted as volumes.
+# DB on host port 5433 to avoid clash with local Postgres. Default admin created on backend start.
 
 services:
   db:
@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     ports:
-      - 5433:5432   # host:container — use 5433 in DBeaver so you hit this container, not local Postgres
+      - 5433:5432
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
     healthcheck:
@@ -34,6 +34,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
       AUTO_SEED_MASTER_DATA: "true"
       AUTO_SYNC_USERS: "false"
+      USER_SYNC_MODE: "mock"
     volumes:
       - ./backend:/app
     working_dir: /app

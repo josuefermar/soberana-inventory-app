@@ -9,8 +9,6 @@
   "users": {
     "title": "Users",
     "refresh": "Refresh",
-    "syncUsers": "Sync Users",
-    "syncing": "Syncing...",
     "createUser": "Create User",
     "editUser": "Edit User",
     "cancel": "Cancel",
@@ -37,8 +35,7 @@
     "cannotEditSelf": "You cannot modify your own user",
     "deactivate": "Deactivate",
     "confirmDeactivateTitle": "Deactivate user?",
-    "confirmDeactivateMessage": "Are you sure you want to deactivate {{name}}?",
-    "synced": "Synced. Users created: {{count}}"
+    "confirmDeactivateMessage": "Are you sure you want to deactivate {{name}}?"
   },
   "inventorySessions": {
     "title": "Create Inventory Session",
@@ -109,7 +106,6 @@
     "role": "Role",
     "manageUsers": "Manage Users",
     "createSession": "Create Inventory Session",
-    "syncUsers": "Sync Users",
     "registerCount": "Register Count",
     "viewCounts": "View Counts",
     "inventorySessions": "Inventory Sessions",

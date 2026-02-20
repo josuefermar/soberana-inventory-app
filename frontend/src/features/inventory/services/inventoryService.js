@@ -37,19 +37,6 @@ export async function createSession(payload) {
 
 /**
  * @param {string} sessionId
- * @param {{ product_ids: string[] }} payload
- * @returns {Promise<{ added: number }>}
- */
-export async function addSessionProducts(sessionId, payload) {
-  const { data } = await apiClient.post(
-    `/inventory-sessions/${sessionId}/products`,
-    payload
-  );
-  return data;
-}
-
-/**
- * @param {string} sessionId
  * @returns {Promise<Array<{ product_id: string; code: string; description: string }>>}
  */
 export async function getSessionProducts(sessionId) {

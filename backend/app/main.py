@@ -30,6 +30,7 @@ from app.presentation.routes.user_managment_routes import router as user_managme
 from app.presentation.routes.warehouse_routes import router as warehouse_router
 from app.presentation.routes.measurement_unit_routes import router as measurement_unit_router
 from app.presentation.routes.product_routes import router as product_router
+from app.presentation.routes.mock_routes import router as mock_router
 
 
 @asynccontextmanager
@@ -101,3 +102,4 @@ app.include_router(user_managment_router)
 app.include_router(warehouse_router)
 app.include_router(measurement_unit_router)
 app.include_router(product_router)
+app.include_router(mock_router)
